@@ -3,32 +3,158 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>try{var _t=localStorage.getItem('mcq-tracker-theme');if(_t!=='light'&&_t!=='dark'){_t=(window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark';}document.documentElement.dataset.theme=_t;}catch(e){}</script>
 <title>MCQ Response Tracker</title>
+<link rel="icon" type="image/png" href="./favicon.png">
+<link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0f1113;
-  --bg-hi:#16191d;
-  --text:#d6d9db;
-  --dim:#79828a;
-  --faint:#4a5258;
-  --line:rgba(255,255,255,.08);
+  color-scheme:dark;
+  /* ===== dark colorway: black studio, charcoal ceramic caps, glowing orange ===== */
+  --bg:#08090b;
+  --bg-glow:#101116;
+  --surface:#16171b;
+  --thead:#16171b;
+  --text:#dfe2e6;
+  --dim:#8a919a;
+  --faint:#5a626c;
+  --line:rgba(255,255,255,.09);
+  --zebra:rgba(255,255,255,.02);
+  --hover:rgba(255,255,255,.05);
+  --ovl:rgba(5,6,8,.8);
+
+  --case:#141519;
+  --case-line:rgba(255,255,255,.07);
+  --case-outer:rgba(0,0,0,.65);
+  --well:rgba(0,0,0,.55);
+  --screw:#3c4148;
+  --screw-hi:rgba(255,255,255,.28);
+
+  --cap:#2b2d33;
+  --cap-top:#373a41;
+  --cap-bot:#212327;
+  --cap-edge:rgba(255,255,255,.14);
+  --s1:#25272c; --s2:#1e2024; --s3:#17181c; --s4:#101114;
+  --cap-drop:rgba(0,0,0,.6);
+  --dish-bot:rgba(0,0,0,.42);
+  --dish-top:rgba(255,255,255,.06);
+  --spec:rgba(255,255,255,.14);
+  --gloss:rgba(255,255,255,.16);
+  --rim:rgba(255,255,255,.28);
+
+  --legend:#f2f3f5;
+  --accent:#f98317;
+
+  /* latched (user answer): bright glowing orange resin */
+  --sel-cap-top:#ffb761; --sel-cap:#f98317; --sel-cap-bot:#e06a0d;
+  --sel-s1:#c96a10; --sel-s3:#8f4a0b;
+  --sel-legend:#ffffff;
+  --sel-glow:rgba(249,131,23,.42);
+
+  /* key-entry latched: smoky translucent amber */
+  --key-cap-top:#8a5a2e; --key-cap:#5f3a1c; --key-cap-bot:#42260f;
+  --key-s1:#6b421d; --key-s3:#3a220c;
+  --key-legend:#ffd9ae;
+  --key-inner:rgba(255,150,60,.3);
+  --key-glow:rgba(230,126,40,.25);
+
   --amber:#f0a437;
-  --green:#37c871;
-  --red:#e2554f;
-  --white-led:#dfe8ec;
-  font-size:16px;
+  --amber-line:rgba(240,164,55,.45);
+  --amber-bg:rgba(240,164,55,.09);
+  --amber-glow:rgba(240,164,55,.26);
+  --green:#3ecf7a; --red:#e85d56;
+  --green-ring:rgba(62,207,122,.6); --green-glow:rgba(62,207,122,.35);
+  --red-ring:rgba(232,93,86,.6); --red-glow:rgba(232,93,86,.32);
+  --white-ring:rgba(223,232,236,.4); --white-glow:rgba(223,232,236,.2);
+  --white-led:#e8eef2;
+  --led-off:#191b1f;
+
+  --bar-a:#4b7fb5; --bar-b:#6fa0d6;
+  --mk-a:#c97a1a; --mk-b:#f0a437;
+  --cur-bg:rgba(240,164,55,.1);
+  --pick-bg:rgba(62,207,122,.07);
+  --stat-bg:rgba(255,255,255,.015);
+
+  --font-legend:'Space Grotesk','IBM Plex Mono',system-ui,sans-serif;
+  --font-mono:'IBM Plex Mono',ui-monospace,'Cascadia Mono',Consolas,monospace;
 }
+[data-theme="light"]{
+  color-scheme:light;
+  /* ===== light colorway: grey studio, ceramic off-white caps, vivid orange ===== */
+  --bg:#d7d7da;
+  --bg-glow:#e9e9ec;
+  --surface:#f4f4f6;
+  --thead:#eeeef0;
+  --text:#2c2d31;
+  --dim:#63666d;
+  --faint:#96999f;
+  --line:rgba(0,0,0,.13);
+  --zebra:rgba(0,0,0,.025);
+  --hover:rgba(0,0,0,.05);
+  --ovl:rgba(215,215,218,.78);
+
+  --case:#c8c8cc;
+  --case-line:rgba(0,0,0,.17);
+  --case-outer:rgba(50,50,60,.28);
+  --well:rgba(0,0,0,.15);
+  --screw:#a8a8ad;
+  --screw-hi:rgba(255,255,255,.8);
+
+  --cap:#ececee;
+  --cap-top:#f8f8f9;
+  --cap-bot:#dcdcdf;
+  --cap-edge:rgba(255,255,255,.95);
+  --s1:#e0e0e3; --s2:#d3d3d6; --s3:#c3c3c7; --s4:#ababb0;
+  --cap-drop:rgba(60,60,70,.3);
+  --dish-bot:rgba(0,0,0,.09);
+  --dish-top:rgba(255,255,255,.9);
+  --spec:rgba(255,255,255,.8);
+  --gloss:rgba(255,255,255,.85);
+  --rim:rgba(255,255,255,.98);
+
+  --legend:#2b2c30;
+  --accent:#e8490f;
+
+  /* latched (user answer): vivid orange cap, white legend */
+  --sel-cap-top:#ff8a4c; --sel-cap:#f4551e; --sel-cap-bot:#d94312;
+  --sel-s1:#c2440f; --sel-s3:#8a3108;
+  --sel-legend:#ffffff;
+  --sel-glow:rgba(244,85,30,.35);
+
+  /* key-entry latched: deep burnt translucent */
+  --key-cap-top:#a3541c; --key-cap:#83400f; --key-cap-bot:#66310a;
+  --key-s1:#8a4614; --key-s3:#542c08;
+  --key-legend:#ffe9d2;
+  --key-inner:rgba(255,190,120,.28);
+  --key-glow:rgba(180,90,20,.25);
+
+  --amber:#b9781b;
+  --amber-line:rgba(183,120,27,.5);
+  --amber-bg:rgba(183,120,27,.08);
+  --amber-glow:rgba(183,120,27,.2);
+  --green:#1e9e56; --red:#c94438;
+  --green-ring:rgba(27,142,78,.75); --green-glow:rgba(27,142,78,.45);
+  --red-ring:rgba(201,68,56,.7); --red-glow:rgba(201,68,56,.4);
+  --white-ring:rgba(255,255,255,.9); --white-glow:rgba(255,255,255,.5);
+  --white-led:#ffffff;
+  --led-off:#c9c3c5;
+
+  --bar-a:#33608f; --bar-b:#5b8cc4;
+  --mk-a:#c97a1a; --mk-b:#e89b3c;
+  --cur-bg:rgba(183,120,27,.1);
+  --pick-bg:rgba(30,158,86,.07);
+  --stat-bg:rgba(0,0,0,.015);
+}
+
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 body{
-  background:
-    radial-gradient(1200px 700px at 50% 30%, var(--bg-hi), var(--bg) 70%),
-    var(--bg);
+  background:radial-gradient(1200px 700px at 50% 28%, var(--bg-glow), var(--bg) 72%), var(--bg);
   color:var(--text);
-  font-family:'IBM Plex Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  font-family:var(--font-mono);
   -webkit-font-smoothing:antialiased;
   user-select:none;
   touch-action:manipulation;
@@ -40,53 +166,87 @@ kbd{
   font-family:inherit;font-size:.72em;color:var(--dim);
   border:1px solid var(--line);border-radius:4px;padding:1px 6px;margin-left:8px;
 }
-.ok{color:var(--green)} .no{color:var(--red)} .dim{color:var(--dim)}
+.ok{color:var(--green)} .no{color:var(--red)} .dim{color:var(--dim)} .fnt{color:var(--faint)}
 
 /* ============ START SCREEN ============ */
-#scr-start{align-items:center;justify-content:center;gap:44px}
+#scr-start{align-items:center;justify-content:center;gap:32px}
 .brand{
-  font-size:13px;letter-spacing:.55em;color:var(--dim);text-indent:.55em;
+  font-family:var(--font-legend);
+  font-size:13px;font-weight:600;letter-spacing:.55em;text-indent:.55em;color:var(--dim);
   padding-bottom:14px;border-bottom:1px solid var(--line);
 }
 .mode-grid{display:flex;gap:26px;flex-wrap:wrap;justify-content:center}
 .mode-btn{
-  font-family:inherit;cursor:pointer;color:var(--text);
-  width:min(330px,84vw);min-height:190px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
-  background:linear-gradient(180deg,#343a3f 0%,#272c30 48%,#1c2023 100%);
-  border:5px solid #0b0d0f;border-radius:14px;
+  position:relative;
+  font-family:var(--font-legend);cursor:pointer;color:var(--legend);
+  width:min(330px,84vw);min-height:186px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:11px;
+  background:
+    radial-gradient(130% 100% at 50% -10%, var(--spec) 0%, transparent 55%),
+    linear-gradient(180deg, var(--cap-top) 0%, var(--cap) 48%, var(--cap-bot) 100%);
+  border:none;border-radius:22px;
   box-shadow:
-    0 0 0 1px rgba(255,255,255,.05),
-    0 10px 0 #08090b,
-    0 16px 26px rgba(0,0,0,.55),
-    inset 0 2px 3px rgba(255,255,255,.09),
-    inset 0 -4px 8px rgba(0,0,0,.45);
-  transition:transform 70ms ease, box-shadow 70ms ease;
+    0 2px 3px var(--s4),
+    0 5px 0 var(--s3),
+    0 8px 0 var(--s2),
+    0 11px 0 var(--s1),
+    0 18px 26px var(--cap-drop),
+    inset 0 2px 2px var(--rim),
+    inset 0 -10px 18px var(--dish-bot);
+  transition:transform 70ms cubic-bezier(.2,.8,.3,1), box-shadow 70ms ease, filter 70ms ease;
 }
-.mode-btn:hover{filter:brightness(1.07)}
-.mode-btn:active,.mode-btn.pressed{
-  transform:translateY(8px);
+.mode-btn::before{
+  content:'';position:absolute;left:8%;right:8%;top:6%;height:30%;
+  border-radius:50% / 100% 100% 60% 60%;
+  background:linear-gradient(180deg, var(--gloss) 0%, transparent 90%);
+  pointer-events:none;
+}
+.mode-btn:hover{filter:brightness(1.06)}
+.mode-btn:active{
+  transform:translateY(7px);
   box-shadow:
-    0 0 0 1px rgba(255,255,255,.05),
-    0 2px 0 #08090b,
-    0 5px 10px rgba(0,0,0,.5),
-    inset 0 2px 8px rgba(0,0,0,.5);
+    0 1px 0 var(--s3),
+    0 3px 0 var(--s2),
+    0 7px 10px var(--cap-drop),
+    inset 0 2px 2px var(--rim),
+    inset 0 8px 14px var(--dish-bot);
 }
-.mode-name{font-size:26px;font-weight:700;letter-spacing:.28em;text-indent:.28em}
+.mode-name{font-size:25px;font-weight:700;letter-spacing:.26em;text-indent:.26em}
 .mode-desc{font-size:12px;color:var(--dim)}
 .mode-key{font-size:13px;color:var(--faint);margin-top:6px}
-.start-foot{font-size:11px;letter-spacing:.18em;color:var(--faint)}
+.start-toggles{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.toggle{
+  font-family:var(--font-legend);cursor:pointer;color:var(--dim);
+  font-size:12px;font-weight:500;letter-spacing:.2em;
+  display:flex;align-items:center;gap:12px;
+  background:var(--surface);border:2px solid var(--line);border-radius:999px;
+  padding:11px 22px;
+  transition:color 120ms, border-color 120ms, filter 120ms;
+}
+.toggle:hover{filter:brightness(1.15)}
+.tg-led{width:9px;height:9px;border-radius:50%;background:var(--led-off);border:1px solid rgba(0,0,0,.25)}
+.toggle.on{color:var(--amber);border-color:var(--amber-line)}
+.toggle.on .tg-led{background:var(--amber);box-shadow:0 0 8px var(--amber)}
+.start-foot{font-size:11px;letter-spacing:.14em;color:var(--faint);text-align:center;line-height:2.1}
+.start-foot b{color:var(--dim);font-weight:600}
 
 /* ============ PANEL HUD ============ */
 .hud{
   display:flex;align-items:flex-start;justify-content:space-between;gap:16px;
-  padding:4px 6px 16px;flex-wrap:wrap;
+  padding:4px 6px 14px;flex-wrap:wrap;
 }
-.hud-mode{font-size:13px;font-weight:600;letter-spacing:.3em}
+.hud-mode{font-family:var(--font-legend);font-size:13px;font-weight:700;letter-spacing:.3em}
+.chip-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:7px}
+.m-chip{
+  font-size:10px;letter-spacing:.18em;border-radius:999px;padding:3px 10px;
+  border:1px solid var(--amber-line);color:var(--amber);background:var(--amber-bg);
+}
+.m-chip.c-conf{border-color:var(--line);color:var(--dim);background:transparent}
+.m-chip.c-blind{border-color:var(--red-glow);color:var(--red);background:transparent}
 .hud-stage{display:flex;align-items:center;gap:8px;margin-top:7px;font-size:11px;letter-spacing:.2em;color:var(--dim)}
-.stage-led{width:8px;height:8px;border-radius:50%;background:#26292c;border:1px solid rgba(255,255,255,.12)}
-.stage-led.led-amber{background:var(--amber);box-shadow:0 0 8px rgba(240,164,55,.8)}
-.stage-led.led-white{background:var(--white-led);box-shadow:0 0 8px rgba(223,232,236,.7)}
+.stage-led{width:8px;height:8px;border-radius:50%;background:var(--led-off);border:1px solid rgba(0,0,0,.25)}
+.stage-led.led-amber{background:var(--amber);box-shadow:0 0 8px var(--amber)}
+.stage-led.led-white{background:var(--white-led);box-shadow:0 0 8px var(--white-led)}
 .hud-session{margin-top:7px;font-size:10px;letter-spacing:.14em;color:var(--faint)}
 .hud-q{display:flex;align-items:baseline;gap:10px;justify-content:center;flex:1;min-width:120px}
 .hud-q-label{font-size:13px;letter-spacing:.3em;color:var(--dim)}
@@ -95,187 +255,344 @@ kbd{
 @keyframes nudge{50%{opacity:.15}}
 .hud-right{text-align:right}
 .hud-stats{font-size:12px;letter-spacing:.1em;display:flex;gap:14px;justify-content:flex-end}
+.hud-stats .skp{color:var(--dim)}
 .hud-timer{margin-top:7px;font-size:15px;color:var(--dim);font-variant-numeric:tabular-nums}
 
-/* ============ KEYS ============ */
+/* ============ MACROPAD CASE + KEYS ============ */
+.pad-case{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:2px 0 8px}
+.pad-shell{
+  width:100%;max-width:980px;
+  background-color:var(--case);
+  background-image:
+    radial-gradient(circle at 20px 20px, var(--screw) 0 2.5px, var(--screw-hi) 3px, transparent 4px),
+    radial-gradient(circle at calc(100% - 20px) 20px, var(--screw) 0 2.5px, var(--screw-hi) 3px, transparent 4px),
+    radial-gradient(circle at 20px calc(100% - 20px), var(--screw) 0 2.5px, var(--screw-hi) 3px, transparent 4px),
+    radial-gradient(circle at calc(100% - 20px) calc(100% - 20px), var(--screw) 0 2.5px, var(--screw-hi) 3px, transparent 4px);
+  border:1px solid var(--case-line);
+  border-radius:30px;
+  padding:clamp(14px,2.2vw,26px);
+  box-shadow:
+    inset 0 3px 10px var(--well),
+    inset 0 -3px 8px var(--well),
+    0 26px 50px var(--case-outer);
+}
 .keys{
-  flex:1;min-height:0;
-  display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(12px,2.4vw,30px);
-  padding-bottom:6px;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(10px,1.6vw,20px);
+  height:clamp(230px,42vh,330px);
 }
 .key{
   position:relative;cursor:pointer;color:var(--text);font-family:inherit;
-  min-height:180px;height:100%;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
-  background:linear-gradient(180deg,#383e43 0%,#2a2f33 48%,#1d2124 100%);
-  border:5px solid #0b0d0f;border-radius:16px;
+  height:100%;width:100%;
+  border:none;border-radius:clamp(18px,2.4vw,26px);
+  background:
+    radial-gradient(130% 100% at 50% -10%, var(--spec) 0%, transparent 55%),
+    linear-gradient(180deg, var(--cap-top) 0%, var(--cap) 48%, var(--cap-bot) 100%);
   box-shadow:
-    0 0 0 1px rgba(255,255,255,.05),
-    0 12px 0 #08090b,
-    0 18px 30px rgba(0,0,0,.6),
-    inset 0 2px 3px rgba(255,255,255,.09),
-    inset 0 -5px 10px rgba(0,0,0,.45);
-  transition:transform 65ms ease, box-shadow 65ms ease, border-color 65ms ease, filter 65ms ease;
+    0 2px 3px var(--s4),
+    0 5px 0 var(--s3),
+    0 8px 0 var(--s2),
+    0 11px 0 var(--s1),
+    0 20px 26px var(--cap-drop),
+    inset 0 2px 2px var(--rim),
+    inset 0 -10px 18px var(--dish-bot);
+  transition:transform 70ms cubic-bezier(.2,.8,.3,1), box-shadow 90ms ease, background 90ms ease, filter 90ms ease;
 }
-.key:focus-visible{outline:2px dashed var(--dim);outline-offset:6px}
-.key:not(.sel):hover{filter:brightness(1.08)}
+.key::before{
+  content:'';position:absolute;left:8%;right:8%;top:5%;height:32%;
+  border-radius:50% / 100% 100% 60% 60%;
+  background:linear-gradient(180deg, var(--gloss) 0%, transparent 90%);
+  pointer-events:none;
+}
+.key:focus-visible{outline:2px dashed var(--dim);outline-offset:8px}
+.key:not(.sel):hover{filter:brightness(1.06)}
 .key:not(.sel):active{
-  transform:translateY(9px);
+  transform:translateY(7px);
   box-shadow:
-    0 0 0 1px rgba(255,255,255,.05),
-    0 3px 0 #08090b,
-    0 6px 12px rgba(0,0,0,.5),
-    inset 0 2px 10px rgba(0,0,0,.5);
+    0 2px 0 var(--s3),
+    0 4px 0 var(--s2),
+    0 7px 9px var(--cap-drop),
+    inset 0 2px 2px var(--rim),
+    inset 0 8px 14px var(--dish-bot);
+}
+.key .knum{
+  position:absolute;top:clamp(12px,1.6vw,19px);left:clamp(14px,2vw,22px);
+  font-family:var(--font-legend);font-weight:500;font-size:15px;color:var(--legend);
+  opacity:.5;letter-spacing:.03em;
 }
 .key .led{
-  position:absolute;top:16px;left:50%;transform:translateX(-50%);
-  width:13px;height:13px;border-radius:50%;
-  background:#22262a;border:1px solid rgba(255,255,255,.1);
+  position:absolute;top:clamp(14px,1.8vw,21px);right:clamp(14px,2vw,22px);
+  width:11px;height:11px;border-radius:50%;
+  background:var(--led-off);
+  box-shadow:inset 0 1.5px 2px rgba(0,0,0,.55), 0 1px 0 var(--cap-edge);
 }
-.key .letter{font-size:clamp(56px,10.5vw,148px);font-weight:600;line-height:1;margin-top:14px}
-.key .cap{font-size:13px;color:var(--faint);margin-top:8px;letter-spacing:.1em}
-/* latched (selected) state */
+.key .letter{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-46%);
+  font-family:var(--font-legend);font-weight:600;
+  font-size:clamp(52px,8.2vw,116px);line-height:1;color:var(--legend);
+  letter-spacing:.01em;text-shadow:0 2px 3px rgba(0,0,0,.16);
+}
+/* latched: user answer — bright glowing orange */
 .key.sel{
-  transform:translateY(10px);
-  background:linear-gradient(180deg,#2b3034 0%,#232729 55%,#1a1d20 100%);
-  border-color:rgba(240,164,55,.55);
+  transform:translateY(7px);
+  background:
+    radial-gradient(130% 100% at 50% -10%, rgba(255,255,255,.42) 0%, transparent 55%),
+    linear-gradient(180deg, var(--sel-cap-top) 0%, var(--sel-cap) 48%, var(--sel-cap-bot) 100%);
   box-shadow:
-    0 0 0 1px rgba(240,164,55,.18),
-    0 2px 0 #08090b,
-    0 5px 10px rgba(0,0,0,.5),
-    inset 0 3px 10px rgba(0,0,0,.55),
-    0 0 26px rgba(240,164,55,.22);
+    0 1px 0 var(--sel-s3),
+    0 3px 0 var(--sel-s1),
+    0 7px 10px var(--cap-drop),
+    inset 0 2px 2px var(--rim),
+    inset 0 -8px 14px rgba(0,0,0,.22),
+    0 0 32px var(--sel-glow);
 }
-.key.sel .led{background:var(--amber);box-shadow:0 0 12px rgba(240,164,55,.9),0 0 4px rgba(240,164,55,.9)}
-.key.sel .letter{color:#f6c37a}
+.key.sel .letter{color:var(--sel-legend);text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.key.sel .knum{color:var(--sel-legend);opacity:.7}
+.key.sel .led{background:var(--amber);box-shadow:0 0 12px var(--amber),0 0 4px var(--amber),inset 0 1px 1px rgba(255,255,255,.4)}
+/* latched: correct-answer entry — smoky translucent */
 .key.sel.stage-key{
-  border-color:rgba(223,232,236,.5);
+  background:
+    radial-gradient(130% 100% at 50% -10%, rgba(255,255,255,.16) 0%, transparent 55%),
+    linear-gradient(180deg, var(--key-cap-top) 0%, var(--key-cap) 48%, var(--key-cap-bot) 100%);
   box-shadow:
-    0 0 0 1px rgba(223,232,236,.15),
-    0 2px 0 #08090b,
-    0 5px 10px rgba(0,0,0,.5),
-    inset 0 3px 10px rgba(0,0,0,.55),
-    0 0 24px rgba(223,232,236,.18);
+    0 1px 0 var(--key-s3),
+    0 3px 0 var(--key-s1),
+    0 7px 10px var(--cap-drop),
+    inset 0 2px 2px var(--rim),
+    inset 0 0 26px var(--key-inner),
+    0 0 24px var(--key-glow);
 }
-.key.sel.stage-key .led{background:var(--white-led);box-shadow:0 0 12px rgba(223,232,236,.85)}
-.key.sel.stage-key .letter{color:var(--white-led)}
-/* grading feedback: LED border glow */
+.key.sel.stage-key .letter{color:var(--key-legend)}
+.key.sel.stage-key .knum{color:var(--key-legend);opacity:.8}
+.key.sel.stage-key .led{background:var(--white-led);box-shadow:0 0 12px var(--white-led),0 0 4px var(--white-led)}
+
+/* grading feedback: LED ring glow */
 .keys.fb-ok .key{
-  border-color:rgba(55,200,113,.6);
   box-shadow:
-    0 0 0 1px rgba(55,200,113,.2),
-    0 12px 0 #08090b,0 18px 30px rgba(0,0,0,.6),
-    inset 0 2px 3px rgba(255,255,255,.09),
-    inset 0 -5px 10px rgba(0,0,0,.45),
-    0 0 28px rgba(55,200,113,.28);
+    0 2px 3px var(--s4), 0 5px 0 var(--s3), 0 8px 0 var(--s2), 0 11px 0 var(--s1),
+    0 20px 26px var(--cap-drop),
+    inset 0 2px 2px var(--rim), inset 0 -10px 18px var(--dish-bot),
+    0 0 0 3px var(--green-ring),
+    0 0 36px var(--green-glow);
 }
 .keys.fb-ok .key.sel{
-  transform:translateY(10px);
-  border-color:rgba(55,200,113,.75);
+  transform:translateY(7px);
   box-shadow:
-    0 0 0 1px rgba(55,200,113,.3),
-    0 2px 0 #08090b,0 5px 10px rgba(0,0,0,.5),
-    inset 0 3px 10px rgba(0,0,0,.55),
-    0 0 34px rgba(55,200,113,.4);
+    0 1px 0 var(--sel-s3), 0 3px 0 var(--sel-s1), 0 7px 10px var(--cap-drop),
+    inset 0 2px 2px var(--rim), inset 0 -8px 14px rgba(0,0,0,.22),
+    0 0 0 3px var(--green-ring),
+    0 0 44px var(--green-glow);
 }
-.keys.fb-ok .key.sel .led{background:var(--green);box-shadow:0 0 14px rgba(55,200,113,.95)}
-.keys.fb-ok .key.sel .letter{color:var(--green)}
+.keys.fb-ok .key .led,
+.keys.fb-ok .key.sel .led{background:var(--green);box-shadow:0 0 12px var(--green),0 0 4px var(--green)}
 .keys.fb-no .key{
-  border-color:rgba(226,85,79,.6);
   box-shadow:
-    0 0 0 1px rgba(226,85,79,.2),
-    0 12px 0 #08090b,0 18px 30px rgba(0,0,0,.6),
-    inset 0 2px 3px rgba(255,255,255,.09),
-    inset 0 -5px 10px rgba(0,0,0,.45),
-    0 0 28px rgba(226,85,79,.26);
+    0 2px 3px var(--s4), 0 5px 0 var(--s3), 0 8px 0 var(--s2), 0 11px 0 var(--s1),
+    0 20px 26px var(--cap-drop),
+    inset 0 2px 2px var(--rim), inset 0 -10px 18px var(--dish-bot),
+    0 0 0 3px var(--red-ring),
+    0 0 36px var(--red-glow);
 }
 .keys.fb-no .key.sel{
-  transform:translateY(10px);
-  border-color:rgba(226,85,79,.75);
+  transform:translateY(7px);
   box-shadow:
-    0 0 0 1px rgba(226,85,79,.3),
-    0 2px 0 #08090b,0 5px 10px rgba(0,0,0,.5),
-    inset 0 3px 10px rgba(0,0,0,.55),
-    0 0 34px rgba(226,85,79,.38);
+    0 1px 0 var(--sel-s3), 0 3px 0 var(--sel-s1), 0 7px 10px var(--cap-drop),
+    inset 0 2px 2px var(--rim), inset 0 -8px 14px rgba(0,0,0,.22),
+    0 0 0 3px var(--red-ring),
+    0 0 44px var(--red-glow);
 }
-.keys.fb-no .key.sel .led{background:var(--red);box-shadow:0 0 14px rgba(226,85,79,.95)}
-.keys.fb-no .key.sel .letter{color:var(--red)}
+.keys.fb-no .key .led,
+.keys.fb-no .key.sel .led{background:var(--red);box-shadow:0 0 12px var(--red),0 0 4px var(--red)}
+.keys.fb-neutral .key{
+  box-shadow:
+    0 2px 3px var(--s4), 0 5px 0 var(--s3), 0 8px 0 var(--s2), 0 11px 0 var(--s1),
+    0 20px 26px var(--cap-drop),
+    inset 0 2px 2px var(--rim), inset 0 -10px 18px var(--dish-bot),
+    0 0 0 3px var(--white-ring),
+    0 0 30px var(--white-glow);
+}
+.keys.fb-neutral .key.sel{
+  transform:translateY(7px);
+  box-shadow:
+    0 1px 0 var(--sel-s3), 0 3px 0 var(--sel-s1), 0 7px 10px var(--cap-drop),
+    inset 0 2px 2px var(--rim), inset 0 -8px 14px rgba(0,0,0,.22),
+    0 0 0 3px var(--white-ring),
+    0 0 34px var(--white-glow);
+}
+.keys.fb-neutral .key .led,
+.keys.fb-neutral .key.sel .led{background:var(--white-led);box-shadow:0 0 12px var(--white-led)}
 
 /* ============ PANEL FOOT ============ */
 .foot{
   display:flex;justify-content:space-between;align-items:center;gap:18px;
   padding:14px 6px 2px;border-top:1px solid var(--line);flex-wrap:wrap;
 }
-.hints{font-size:10px;letter-spacing:.18em;color:var(--faint)}
+.hints{font-size:10px;letter-spacing:.14em;color:var(--faint);line-height:1.9}
 .log-strip{display:flex;gap:22px;font-size:11px;color:var(--dim);overflow:hidden;flex-wrap:wrap;justify-content:flex-end}
 .log-e{white-space:nowrap;font-variant-numeric:tabular-nums}
 .log-e .ts{color:var(--faint)}
+.log-e .sk{color:var(--faint)}
 
 /* recovered chip */
 .chip{
   position:absolute;top:16px;right:24px;z-index:5;
   font-size:10px;letter-spacing:.24em;color:var(--amber);
-  border:1px solid rgba(240,164,55,.4);border-radius:4px;padding:5px 10px;
-  background:rgba(15,17,19,.85);
+  border:1px solid var(--amber-line);border-radius:999px;padding:5px 12px;
+  background:var(--surface);
 }
 #scr-panel{position:relative}
 
 /* ============ OVERLAYS ============ */
 .overlay{
   position:fixed;inset:0;z-index:20;
-  background:rgba(10,11,13,.78);backdrop-filter:blur(2px);
+  background:var(--ovl);backdrop-filter:blur(2px);
   display:flex;align-items:center;justify-content:center;
+  overflow-y:auto;padding:20px;
 }
 .overlay[hidden]{display:none!important}
 .pause-card,.confirm-card{
-  background:#17191c;border:1px solid var(--line);border-radius:12px;
+  background:var(--surface);border:1px solid var(--line);border-radius:18px;
   padding:38px 46px;min-width:min(420px,88vw);
-  box-shadow:0 24px 60px rgba(0,0,0,.6);
+  box-shadow:0 24px 60px rgba(0,0,0,.35);
   text-align:center;
 }
-.pause-title{font-size:22px;font-weight:700;letter-spacing:.5em;text-indent:.5em}
+.pause-title{font-family:var(--font-legend);font-size:22px;font-weight:700;letter-spacing:.5em;text-indent:.5em}
 .pause-timer{margin-top:10px;font-size:14px;color:var(--dim);font-variant-numeric:tabular-nums}
 .pause-actions{margin-top:32px;display:flex;flex-direction:column;gap:14px}
 .ctl{
-  font-family:inherit;cursor:pointer;color:var(--text);
-  font-size:13px;letter-spacing:.22em;
-  background:linear-gradient(180deg,#31363b,#24282c);
-  border:4px solid #0b0d0f;border-radius:10px;padding:14px 22px;
-  box-shadow:0 6px 0 #08090b,0 10px 18px rgba(0,0,0,.5),
-    inset 0 1px 2px rgba(255,255,255,.08);
-  transition:transform 60ms ease,box-shadow 60ms ease;
+  position:relative;overflow:hidden;
+  font-family:var(--font-legend);cursor:pointer;color:var(--legend);
+  font-size:13px;font-weight:500;letter-spacing:.2em;
+  background:
+    radial-gradient(130% 100% at 50% -10%, var(--spec) 0%, transparent 55%),
+    linear-gradient(180deg, var(--cap-top) 0%, var(--cap) 48%, var(--cap-bot) 100%);
+  border:none;border-radius:13px;padding:14px 22px;
+  box-shadow:
+    0 1px 0 var(--s3),
+    0 4px 0 var(--s1),
+    0 8px 12px var(--cap-drop),
+    inset 0 2px 2px var(--rim);
+  transition:transform 60ms cubic-bezier(.2,.8,.3,1), box-shadow 60ms ease, filter 60ms ease;
 }
-.ctl:hover{filter:brightness(1.1)}
-.ctl:active{transform:translateY(4px);box-shadow:0 2px 0 #08090b,inset 0 2px 6px rgba(0,0,0,.5)}
+.ctl::before{
+  content:'';position:absolute;left:8%;right:8%;top:6%;height:32%;
+  border-radius:50% / 100% 100% 60% 60%;
+  background:linear-gradient(180deg, var(--gloss) 0%, transparent 90%);
+  pointer-events:none;
+}
+.ctl:hover{filter:brightness(1.07)}
+.ctl:active{
+  transform:translateY(4px);
+  box-shadow:
+    0 1px 0 var(--s2),
+    0 3px 6px var(--cap-drop),
+    inset 0 2px 2px var(--rim);
+}
 .ctl kbd{margin-left:10px}
 .confirm-msg{font-size:14px;line-height:1.7;letter-spacing:.04em}
 .confirm-actions{margin-top:30px;display:flex;gap:14px;justify-content:center}
 
+/* wide overlay cards (edit / history / compare) */
+.wide-card{
+  background:var(--surface);border:1px solid var(--line);border-radius:18px;
+  width:min(1060px,96vw);max-height:92vh;display:flex;flex-direction:column;
+  box-shadow:0 24px 60px rgba(0,0,0,.35);
+}
+.wide-head{
+  display:flex;justify-content:space-between;align-items:center;gap:14px;
+  padding:18px 22px;border-bottom:1px solid var(--line);flex-wrap:wrap;
+}
+.wide-title{font-family:var(--font-legend);font-size:14px;font-weight:700;letter-spacing:.34em}
+.wide-sub{margin-top:6px;font-size:11px;color:var(--dim);letter-spacing:.12em}
+.wide-body{overflow-y:auto;padding:10px 12px}
+.wide-foot{
+  padding:12px 22px;border-top:1px solid var(--line);
+  font-size:10px;letter-spacing:.14em;color:var(--faint);line-height:2;flex-wrap:wrap;
+}
+.renum{
+  padding:10px 22px;border-top:1px solid var(--line);
+  font-size:13px;color:var(--amber);letter-spacing:.1em;display:none;
+}
+.renum.on{display:block}
+.renum b{font-weight:700;color:var(--amber)}
+
+table.list{width:100%;border-collapse:collapse;font-size:12px}
+table.list th,table.list td{padding:8px 10px;text-align:left;white-space:nowrap;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+table.list th{font-size:10px;letter-spacing:.18em;color:var(--dim);position:sticky;top:0;background:var(--thead)}
+table.list tr.cur{background:var(--cur-bg);outline:1px solid var(--amber-line);outline-offset:-1px}
+table.list tr.picked{background:var(--pick-bg)}
+table.list tr:hover{background:var(--hover)}
+table.list td.editing{color:var(--amber)}
+.field-tag{font-size:9px;letter-spacing:.2em;color:var(--amber);border:1px solid var(--amber-line);border-radius:999px;padding:1px 6px}
+
 /* ============ DASHBOARD ============ */
-#scr-dash{overflow-y:auto;gap:26px;padding:26px 8px 40px}
+#scr-dash{overflow-y:auto;gap:22px;padding:26px 8px 48px}
 .dash-head{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;flex-wrap:wrap}
-.dash-title{font-size:20px;font-weight:700;letter-spacing:.4em}
+.dash-title{font-family:var(--font-legend);font-size:20px;font-weight:700;letter-spacing:.4em}
 .dash-sub{margin-top:8px;font-size:12px;letter-spacing:.18em;color:var(--dim)}
-.dash-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
-.stat{border:2px solid var(--line);border-radius:10px;padding:14px 16px;background:rgba(255,255,255,.015)}
-.stat-l{font-size:10px;letter-spacing:.22em;color:var(--dim)}
-.stat-v{margin-top:8px;font-size:21px;font-weight:600;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
-.dash-log-l{margin-top:6px;font-size:11px;letter-spacing:.3em;color:var(--dim);border-bottom:1px solid var(--line);padding-bottom:10px}
+.dash-actions{display:flex;gap:12px;flex-wrap:wrap}
+/* hero band */
+.dash-hero{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:14px;
+  border:2px solid var(--line);border-radius:18px;padding:22px 24px;
+  background:var(--stat-bg);
+}
+.hero-l{font-size:10px;letter-spacing:.22em;color:var(--dim)}
+.hero-v{
+  margin-top:9px;font-family:var(--font-legend);font-weight:700;
+  font-size:clamp(26px,3vw,36px);line-height:1;font-variant-numeric:tabular-nums;
+  overflow-wrap:anywhere;
+}
+.hero-cell.accent .hero-v{color:var(--accent)}
+.hero-cell.ok .hero-v{color:var(--green)}
+.hero-cell.no .hero-v{color:var(--red)}
+/* meta chips */
+.dash-meta{display:flex;flex-wrap:wrap;gap:10px}
+.meta-chip{
+  font-size:11px;border:1px solid var(--line);border-radius:999px;padding:5px 13px;
+  color:var(--text);font-variant-numeric:tabular-nums;
+}
+.meta-chip span{color:var(--faint);letter-spacing:.16em;font-size:9px;margin-right:8px}
+/* analytics cards */
+.dash-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.dash-card{border:2px solid var(--line);border-radius:18px;padding:18px 20px;background:var(--stat-bg)}
+.dash-l{font-size:10px;letter-spacing:.26em;color:var(--dim);margin-bottom:14px}
+.mini-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(92px,1fr));gap:12px}
+.mini-l{font-size:9px;letter-spacing:.18em;color:var(--faint)}
+.mini-v{margin-top:6px;font-size:16px;font-weight:600;font-variant-numeric:tabular-nums}
+.empty-note{color:var(--faint);font-size:12px;padding:6px 0}
+/* section label */
+.dash-sec-l{font-size:11px;letter-spacing:.3em;color:var(--dim);border-bottom:1px solid var(--line);padding-bottom:10px}
+.dash-foot{font-size:10px;letter-spacing:.14em;color:var(--faint);padding-top:2px}
+/* tables */
 .tbl-wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:13px}
 th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap;font-variant-numeric:tabular-nums}
-thead th{position:sticky;top:0;background:#14171a;font-size:10px;letter-spacing:.18em;color:var(--dim);border-bottom:1px solid rgba(255,255,255,.15)}
-tbody tr:nth-child(even){background:rgba(255,255,255,.02)}
-tbody tr:hover{background:rgba(255,255,255,.045)}
+thead th{position:sticky;top:0;background:var(--thead);font-size:10px;letter-spacing:.18em;color:var(--dim);border-bottom:1px solid var(--line)}
+tbody tr:nth-child(even){background:var(--zebra)}
+tbody tr:hover{background:var(--hover)}
+/* response-time bars */
+.bars{display:flex;flex-direction:column;gap:6px;padding:6px 0}
+.bar-row{display:grid;grid-template-columns:52px 1fr 62px;gap:10px;align-items:center;font-size:11px;color:var(--dim)}
+.bar-row .bl{color:var(--faint);font-variant-numeric:tabular-nums}
+.bar-row .bt{text-align:right;color:var(--faint);font-variant-numeric:tabular-nums}
+.bar{height:10px;background:var(--zebra);border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--bar-a),var(--bar-b));border-radius:3px}
+.bar-row.mk .bar i{background:linear-gradient(90deg,var(--mk-a),var(--mk-b))}
+.bar-row.sk .bar i{background:var(--faint)}
+.bar-row.sk{opacity:.65}
 
 @media (max-width:720px){
-  .keys{grid-template-columns:repeat(2,1fr);grid-auto-rows:1fr}
-  .key{min-height:150px}
+  .keys{height:auto;grid-template-columns:repeat(2,1fr);grid-auto-rows:minmax(140px,24vh)}
   .hud-q{order:-1;width:100%;justify-content:center}
+  .wide-card{max-height:96vh}
+  .key .letter{font-size:clamp(44px,16vw,90px)}
+  .dash-hero{padding:18px}
+  .hero-v{font-size:clamp(22px,7vw,30px)}
 }
 @media (prefers-reduced-motion:reduce){
   *{transition-duration:1ms!important;animation-duration:1ms!important}
 }
+
 </style>
 </head>
 <body>
@@ -296,7 +613,18 @@ tbody tr:hover{background:rgba(255,255,255,.045)}
         <div class="mode-key">PRESS [ 2 ]</div>
       </button>
     </div>
-    <div class="start-foot">1–4 SELECT &nbsp;·&nbsp; ENTER COMMIT &nbsp;·&nbsp; ESC PAUSE</div>
+    <div class="start-toggles">
+      <button type="button" class="toggle" id="btn-blind">
+        <span class="tg-led"></span><span id="blind-label">BLIND GRADING — OFF</span><kbd>B</kbd>
+      </button>
+      <button type="button" class="toggle" id="btn-theme">
+        <span class="tg-led"></span><span id="theme-label">THEME — DARK</span><kbd>T</kbd>
+      </button>
+    </div>
+    <div class="start-foot">
+      <b>B</b> BLIND GRADING (NO FEEDBACK UNTIL REPORT) &nbsp;·&nbsp; <b>H</b> SESSION HISTORY &nbsp;·&nbsp; <b>I</b> IMPORT BACKUP<br>
+      1–4 SELECT &nbsp;·&nbsp; ENTER COMMIT &nbsp;·&nbsp; S SKIP &nbsp;·&nbsp; M MARK &nbsp;·&nbsp; 7–9 CONFIDENCE &nbsp;·&nbsp; T THEME &nbsp;·&nbsp; E EDIT LOG
+    </div>
   </section>
 
   <!-- MAIN PANEL -->
@@ -308,6 +636,7 @@ tbody tr:hover{background:rgba(255,255,255,.045)}
         <div id="hud-stage" class="hud-stage" hidden>
           <span id="stage-led" class="stage-led"></span><span id="stage-text">RESPONSE</span>
         </div>
+        <div class="chip-row" id="hud-chips"></div>
         <div id="hud-session" class="hud-session"></div>
       </div>
       <div class="hud-q" id="hud-q">
@@ -319,10 +648,14 @@ tbody tr:hover{background:rgba(255,255,255,.045)}
       </div>
     </header>
 
-    <div id="keys" class="keys"></div>
+    <div class="pad-case">
+      <div class="pad-shell">
+        <div id="keys" class="keys"></div>
+      </div>
+    </div>
 
     <footer class="foot">
-      <div class="hints">1–4 SELECT &nbsp;·&nbsp; ENTER COMMIT &nbsp;·&nbsp; ESC PAUSE</div>
+      <div class="hints">1–4 SELECT · ENTER COMMIT · S SKIP · M MARK · 7–9 CONF · E EDIT · T THEME · ESC PAUSE</div>
       <div id="log-strip" class="log-strip"></div>
     </footer>
   </section>
@@ -338,6 +671,7 @@ tbody tr:hover{background:rgba(255,255,255,.045)}
     <div class="pause-timer" id="pause-timer"></div>
     <div class="pause-actions">
       <button type="button" class="ctl" id="btn-resume">RESUME<kbd>SPACE</kbd></button>
+      <button type="button" class="ctl" id="btn-edit-paused">EDIT RESPONSE LOG<kbd>E</kbd></button>
       <button type="button" class="ctl" id="btn-finish">FINISH SESSION<kbd>F</kbd></button>
       <button type="button" class="ctl" id="btn-new">NEW SESSION<kbd>N</kbd></button>
     </div>
@@ -355,28 +689,96 @@ tbody tr:hover{background:rgba(255,255,255,.045)}
   </div>
 </div>
 
+<!-- EDIT LOG -->
+<div id="ovl-edit" class="overlay" hidden>
+  <div class="wide-card">
+    <div class="wide-head">
+      <div>
+        <div class="wide-title">RESPONSE LOG</div>
+        <div class="wide-sub" id="edit-sub"></div>
+      </div>
+      <div id="edit-field" class="field-tag" hidden>EDITING: RESPONSE</div>
+    </div>
+    <div class="wide-body" id="edit-body"></div>
+    <div class="renum" id="renum-bar"></div>
+    <div class="wide-foot">
+      ↑↓ SELECT &nbsp;·&nbsp; 1–4 TOGGLE <span id="edit-what">ANSWER</span> &nbsp;·&nbsp; TAB SWITCH FIELD &nbsp;·&nbsp; R MARK &nbsp;·&nbsp; 7–9 CONFIDENCE &nbsp;·&nbsp; X RENUMBER &nbsp;·&nbsp; ESC CLOSE
+    </div>
+  </div>
+</div>
+
+<!-- HISTORY -->
+<div id="ovl-history" class="overlay" hidden>
+  <div class="wide-card">
+    <div class="wide-head">
+      <div>
+        <div class="wide-title">SESSION HISTORY</div>
+        <div class="wide-sub" id="hist-sub"></div>
+      </div>
+      <div class="dash-actions">
+        <button type="button" class="ctl" id="btn-hist-json">EXPORT ALL JSON<kbd>J</kbd></button>
+        <button type="button" class="ctl" id="btn-backup">BACKUP<kbd>U</kbd></button>
+      </div>
+    </div>
+    <div class="wide-body" id="hist-body"></div>
+    <div class="wide-foot">
+      ↑↓ SELECT &nbsp;·&nbsp; ENTER VIEW REPORT &nbsp;·&nbsp; SPACE PICK FOR COMPARE &nbsp;·&nbsp; C COMPARE &nbsp;·&nbsp; D DELETE &nbsp;·&nbsp; J EXPORT JSON &nbsp;·&nbsp; U BACKUP (JSON) &nbsp;·&nbsp; ESC CLOSE
+    </div>
+  </div>
+</div>
+
+<!-- COMPARE -->
+<div id="ovl-compare" class="overlay" hidden>
+  <div class="wide-card">
+    <div class="wide-head">
+      <div>
+        <div class="wide-title">SESSION COMPARISON</div>
+        <div class="wide-sub" id="cmp-sub"></div>
+      </div>
+    </div>
+    <div class="wide-body" id="cmp-body"></div>
+    <div class="wide-foot">ESC BACK</div>
+  </div>
+</div>
+
+<input type="file" id="file-import" accept=".json,application/json" hidden>
+
 <script>
 'use strict';
 const KEY = 'mcq-tracker-v1';
+const HKEY = 'mcq-tracker-history-v1';
+const BKEY = 'mcq-tracker-blind';
 const $ = id => document.getElementById(id);
 const LETTERS = 'ABCD';
 const pad = n => String(n).padStart(2,'0');
 const pad3 = n => String(n).padStart(3,'0');
+const CONF_TXT = ['', 'LOW', 'MED', 'HIGH'];
 
-let S = null;            // persisted session state
-let screen = 'start';    // start | panel | dash
-let flashing = false;     // grading LED feedback in progress
+let S = null;              // active (or just-finished) session
+let curDash = null;         // session object currently shown on dashboard
+let screen = 'start';      // start | panel | dash
+let flashing = false;
 let confirmCb = null;
+let blindNext = false;
+let edit = { open:false, sel:0, field:'answers', renum:null, wasActive:false };
+let hist = { open:false, sel:0, picks:new Set(), compare:false, rows:[] };
+let histView = false;      // dashboard is showing an archived session
 
-/* ---------- time helpers ---------- */
+/* ================= time helpers ================= */
 function fmtDur(ms){
   const s = Math.max(0, Math.floor(ms/1000));
   const h = Math.floor(s/3600), m = Math.floor((s%3600)/60), ss = s%60;
   return h ? h + ':' + pad(m) + ':' + pad(ss) : pad(m) + ':' + pad(ss);
 }
+function fmtSec(ms){ return (ms/1000).toFixed(1) + 's'; }
 function fmtDate(d){ return pad(d.getDate()) + '/' + pad(d.getMonth()+1) + '/' + d.getFullYear(); }
 function fmtTime(d){ return pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds()); }
 function fmtAns(a){ return (a && a.length) ? a.join('+') : '—'; }
+function median(arr){
+  if(!arr.length) return 0;
+  const x = arr.slice().sort((p,q)=>p-q), m = Math.floor(x.length/2);
+  return x.length % 2 ? x[m] : (x[m-1]+x[m])/2;
+}
 function sid(){
   const d = new Date();
   return 'S' + d.getFullYear() + pad(d.getMonth()+1) + pad(d.getDate()) + '-' +
@@ -386,36 +788,55 @@ function activeMsNow(){
   if(!S) return 0;
   return S.activeMs + (S.status === 'active' && S.lastResume ? Date.now() - S.lastResume : 0);
 }
+function qTimeNow(){
+  if(!S) return 0;
+  return (S.qAcc||0) + (S.qStart ? Date.now() - S.qStart : 0);
+}
 
-/* ---------- persistence ---------- */
+/* ================= persistence ================= */
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
 function loadSaved(){
   try{ const r = localStorage.getItem(KEY); return r ? JSON.parse(r) : null; }catch(e){ return null; }
 }
+function loadHistory(){
+  try{ const r = localStorage.getItem(HKEY); const a = r ? JSON.parse(r) : []; return Array.isArray(a) ? a : []; }
+  catch(e){ return []; }
+}
+function saveHistory(a){ try{ localStorage.setItem(HKEY, JSON.stringify(a)); }catch(e){} }
+function loadBlind(){ try{ return localStorage.getItem(BKEY) === '1'; }catch(e){ return false; } }
+function saveBlind(){ try{ localStorage.setItem(BKEY, blindNext ? '1' : '0'); }catch(e){} }
 
-/* ---------- screens ---------- */
+/* ================= screens ================= */
 function show(id){
   ['scr-start','scr-panel','scr-dash'].forEach(s => $(s).hidden = (s !== id));
 }
 
-/* ---------- session lifecycle ---------- */
+/* ================= session lifecycle ================= */
 function newSession(mode){
+  const now = Date.now();
   S = {
+    v: 2,
     sessionId: sid(),
-    mode: mode,                 // 'logging' | 'grading'
-    stage: 'user',             // grading: 'user' | 'correct'
+    mode: mode,
+    blind: (mode === 'grading' && blindNext),
+    stage: 'user',
     selection: [],
     pendingUser: null,
+    marked: false,
+    confidence: 0,
+    qStart: now,
+    qAcc: 0,
     responses: [],
-    status: 'active',          // 'active' | 'paused' | 'finished'
-    startedAt: new Date().toISOString(),
-    startClock: Date.now(),
+    status: 'active',
+    startedAt: new Date(now).toISOString(),
+    startClock: now,
     activeMs: 0,
-    lastResume: Date.now(),
+    lastResume: now,
     endClock: null,
     endedAt: null
   };
   save();
+  curDash = null; histView = false;
   screen = 'panel';
   show('scr-panel');
   renderPanel();
@@ -425,33 +846,50 @@ function pause(){
   if(!S || screen !== 'panel' || S.status !== 'active' || flashing) return;
   S.activeMs = activeMsNow();
   S.lastResume = null;
+  S.qAcc = qTimeNow();
+  S.qStart = null;
   S.status = 'paused';
   save();
-  $('pause-timer').textContent = 'ACTIVE ' + fmtDur(S.activeMs);
-  $('ovl-pause').hidden = false;
+  showPause();
 }
 function resume(){
   if(!S || S.status !== 'paused') return;
   S.lastResume = Date.now();
+  S.qStart = Date.now();
   S.status = 'active';
   save();
-  $('ovl-pause').hidden = true;
+  hidePause();
   renderPanel();
 }
+function showPause(){
+  $('pause-timer').textContent = 'ACTIVE ' + fmtDur(S.activeMs);
+  $('ovl-pause').hidden = false;
+}
+function hidePause(){ $('ovl-pause').hidden = true; }
+
 function finishSession(){
   if(!S || S.status === 'finished') return;
-  if(S.status === 'active') S.activeMs = activeMsNow();
+  if(S.status === 'active'){
+    S.activeMs = activeMsNow();
+    S.qAcc = qTimeNow(); S.qStart = null;
+  }
   S.status = 'finished';
   S.endClock = Date.now();
   S.endedAt = new Date().toISOString();
+  // archive
+  const a = loadHistory();
+  a.push(JSON.parse(JSON.stringify(S)));
+  while(a.length > 50) a.shift();
+  saveHistory(a);
   save();
-  $('ovl-pause').hidden = true;
+  hidePause();
+  curDash = S; histView = false;
   screen = 'dash';
   renderDash();
   show('scr-dash');
 }
 
-/* ---------- confirm ---------- */
+/* ================= confirm ================= */
 function confirmAsk(msg, cb){
   confirmCb = cb;
   $('confirm-msg').textContent = msg;
@@ -459,19 +897,20 @@ function confirmAsk(msg, cb){
 }
 function confirmClose(){ $('ovl-confirm').hidden = true; confirmCb = null; }
 function askNew(){
-  if(S && S.responses.length > 0){
+  if(S && S.status !== 'finished' && S.responses.length > 0){
     confirmAsk('Start a new session? The current session data will be cleared.', doNew);
   } else doNew();
 }
 function doNew(){
   try{ localStorage.removeItem(KEY); }catch(e){}
-  S = null;
-  $('ovl-pause').hidden = true;
+  S = null; curDash = null; histView = false;
+  hidePause();
   screen = 'start';
+  renderStart();
   show('scr-start');
 }
 
-/* ---------- selection & commit ---------- */
+/* ================= selection / commit / skip ================= */
 function toggle(i){
   if(!S || screen !== 'panel' || S.status !== 'active' || flashing) return;
   const L = LETTERS[i];
@@ -489,62 +928,106 @@ function nudge(){
   q.classList.add('nudge');
 }
 
+function baseRec(){
+  return {
+    n: S.responses.length + 1,
+    answers: null,
+    correct: null,
+    result: null,
+    skipped: false,
+    marked: S.marked,
+    confidence: S.confidence || 0,
+    durationMs: qTimeNow(),
+    iso: new Date().toISOString(),
+    sessionId: S.sessionId,
+    mode: S.mode
+  };
+}
+function nextQuestion(){
+  S.selection = [];
+  S.stage = 'user';
+  S.pendingUser = null;
+  S.marked = false;
+  S.confidence = 0;
+  S.qAcc = 0;
+  S.qStart = Date.now();
+  save();
+}
+
+function skip(){
+  if(!S || screen !== 'panel' || S.status !== 'active' || flashing) return;
+  if(S.mode === 'grading' && S.stage === 'correct') return;  // only at response stage
+  const rec = baseRec();
+  rec.skipped = true;
+  S.responses.push(rec);
+  nextQuestion();
+  renderPanel();
+}
+
 function commit(){
   if(!S || screen !== 'panel' || S.status !== 'active' || flashing) return;
   if(S.selection.length === 0){ nudge(); return; }   // nothing composed — ignore
 
-  const now = new Date();
-  const rec = {
-    n: S.responses.length + 1,
-    answers: S.selection.slice().sort(),
-    correct: null,
-    result: null,
-    iso: now.toISOString(),
-    sessionId: S.sessionId,
-    mode: S.mode
-  };
+  const rec = baseRec();
+  rec.answers = S.selection.slice().sort();
 
   if(S.mode === 'logging'){
     S.responses.push(rec);
-    S.selection = [];
-    save();
+    nextQuestion();
     renderPanel();
     return;
   }
 
   if(S.stage === 'user'){                 // grading — stage 1 committed
-    S.pendingUser = S.selection.slice().sort();
+    S.pendingUser = rec.answers;
     S.stage = 'correct';
     S.selection = [];
+    S.qAcc = 0; S.qStart = Date.now();   // key-entry gets its own clock
     save();
     renderPanel();
   } else {                                // grading — stage 2 committed -> grade
-    rec.answers = S.pendingUser;         // user's committed response from stage 1
+    rec.answers = S.pendingUser;          // user's committed response from stage 1
     rec.correct = S.selection.slice().sort();
     rec.result = rec.answers.length === rec.correct.length &&
                  rec.answers.every((a, k) => a === rec.correct[k]);
     S.responses.push(rec);
     save();
-    flash(rec.result);
+    flash(S.blind ? 'neutral' : (rec.result ? 'ok' : 'no'));
   }
 }
 
-function flash(ok){
+function flash(kind){
   flashing = true;
   const keys = $('keys');
-  keys.classList.add(ok ? 'fb-ok' : 'fb-no');
+  keys.classList.add('fb-' + kind);
   setTimeout(() => {
-    keys.classList.remove('fb-ok', 'fb-no');
-    S.selection = [];
-    S.stage = 'user';
-    S.pendingUser = null;
+    keys.classList.remove('fb-ok','fb-no','fb-neutral');
+    nextQuestion();
     flashing = false;
-    save();
     if(screen === 'panel') renderPanel();
   }, 900);
 }
 
-/* ---------- render: panel ---------- */
+function toggleMark(){
+  if(!S || screen !== 'panel' || S.status !== 'active' || flashing) return;
+  S.marked = !S.marked;
+  save();
+  renderPanel();
+}
+function setConf(c){
+  if(!S || screen !== 'panel' || S.status !== 'active' || flashing) return;
+  S.confidence = (S.confidence === c) ? 0 : c;
+  save();
+  renderPanel();
+}
+
+/* ================= render: start ================= */
+function renderStart(){
+  $('blind-label').textContent = 'BLIND GRADING — ' + (blindNext ? 'ON' : 'OFF');
+  $('btn-blind').classList.toggle('on', blindNext);
+}
+
+/* ================= render: panel ================= */
 function renderPanel(){
   if(!S) return;
   $('hud-qnum').textContent = pad3(S.responses.length + 1);
@@ -560,18 +1043,36 @@ function renderPanel(){
     $('stage-led').classList.toggle('led-amber', !keying);
   } else stageEl.hidden = true;
 
-  if(S.mode === 'grading'){
-    const c = S.responses.filter(r => r.result).length;
+  // chips: blind / marked / confidence
+  let chips = '';
+  if(S.blind) chips += '<span class="m-chip c-blind">BLIND</span>';
+  if(S.marked) chips += '<span class="m-chip">◆ MARKED</span>';
+  if(S.confidence) chips += '<span class="m-chip c-conf">CONF ' + CONF_TXT[S.confidence] + '</span>';
+  $('hud-chips').innerHTML = chips;
+
+  // stats
+  const total = S.responses.length;
+  const skipped = S.responses.filter(r => r.skipped).length;
+  if(S.mode === 'grading' && !S.blind){
+    const c = S.responses.filter(r => r.result === true).length;
+    const w = S.responses.filter(r => r.result === false).length;
+    const skipped = S.responses.filter(r => r.skipped).length;
+    const ungraded = S.responses.filter(r => !r.skipped && r.result === null).length;
     $('hud-stats').innerHTML =
-      '<span class="ok">✓ ' + c + '</span><span class="no">✗ ' + (S.responses.length - c) + '</span>';
+      '<span class="ok">✓ ' + c + '</span><span class="no">✗ ' + w + '</span>' +
+      (skipped ? '<span class="skp">○ ' + skipped + '</span>' : '') +
+      (ungraded ? '<span class="skp">? ' + ungraded + '</span>' : '');
+  } else if(S.mode === 'grading'){
+    $('hud-stats').textContent = total + ' GRADED' + (skipped ? ' · ○ ' + skipped : '');
   } else {
-    $('hud-stats').textContent = S.responses.length + ' LOGGED';
+    $('hud-stats').textContent = (total - skipped) + ' LOGGED' + (skipped ? ' · ○ ' + skipped : '');
   }
   $('hud-timer').textContent = fmtDur(activeMsNow());
 
   const keying = S.mode === 'grading' && S.stage === 'correct';
   document.querySelectorAll('#keys .key').forEach(k => {
-    k.classList.toggle('sel', S.selection.includes(k.dataset.letter));
+    const L = k.dataset.letter;
+    k.classList.toggle('sel', S.selection.includes(L));
     k.classList.toggle('stage-key', keying);
   });
 
@@ -579,63 +1080,446 @@ function renderPanel(){
   const last = S.responses.slice(-3).reverse();
   strip.innerHTML = last.map(r => {
     const t = new Date(r.iso);
+    if(r.skipped) return '<span class="log-e">Q' + pad(r.n) + ' · <span class="sk">SKIP</span>' +
+      (r.marked ? ' ◆' : '') + ' · <span class="ts">' + fmtTime(t) + '</span></span>';
     const mark = r.result === null ? '' :
       (r.result ? '<span class="ok">✓</span>' : '<span class="no">✗</span>');
     return '<span class="log-e">Q' + pad(r.n) + ' · ' + fmtAns(r.answers) +
-           ' · <span class="ts">' + fmtTime(t) + '</span> ' + mark + '</span>';
-  }).join('') || '<span class="log-e dim" style="color:var(--faint)">NO ENTRIES</span>';
+      (r.marked ? ' ◆' : '') + (r.confidence ? ' <span class="ts">[' + CONF_TXT[r.confidence] + ']</span>' : '') +
+      ' · <span class="ts">' + fmtTime(t) + '</span> ' + mark + '</span>';
+  }).join('') || '<span class="log-e fnt" style="color:var(--faint)">NO ENTRIES</span>';
 }
 
-/* ---------- render: dashboard ---------- */
+/* ================= edit overlay ================= */
+function openEdit(){
+  if(!S || screen !== 'panel' || S.status === 'finished' || flashing) return;
+  edit.open = true;
+  edit.sel = Math.max(0, S.responses.length - 1);
+  edit.field = 'answers';
+  edit.renum = null;
+  if(S.status === 'active'){ pause(); edit.wasActive = true; } else edit.wasActive = false;
+  hidePause();
+  $('ovl-edit').hidden = false;
+  renderEdit();
+}
+function closeEdit(){
+  edit.open = false;
+  $('ovl-edit').hidden = true;
+  if(edit.wasActive){ edit.wasActive = false; resume(); }
+  else if(S && S.status === 'paused') showPause();
+}
+function recomputeRec(r){
+  if(r.skipped || !r.answers || !r.correct){ r.result = null; return; }
+  r.result = r.answers.length === r.correct.length &&
+             r.answers.every((a, k) => a === r.correct[k]);
+}
+function renderEdit(){
+  if(!S || !S.responses.length){
+    $('edit-sub').textContent = S.sessionId + ' · NO RESPONSES YET';
+    $('edit-body').innerHTML = '<div style="padding:30px;color:var(--faint);text-align:center">No responses recorded.</div>';
+    $('edit-field').hidden = true;
+    return;
+  }
+  if(edit.sel >= S.responses.length) edit.sel = S.responses.length - 1;
+  const grading = S.mode === 'grading';
+  $('edit-sub').textContent = S.sessionId + ' · ' + (grading ? 'GRADING' : 'LOGGING');
+  const fTag = $('edit-field');
+  fTag.hidden = !grading;
+  if(grading) fTag.textContent = 'EDITING: ' + (edit.field === 'answers' ? 'RESPONSE' : 'KEY');
+  $('edit-what').textContent = edit.field === 'answers' ? 'ANSWER' : 'KEY';
+
+  let rows = S.responses.map((r, i) => {
+    const t = new Date(r.iso);
+    let cells = '<td>' + pad(r.n) + '</td>' +
+      '<td>' + (r.marked ? '<span class="ok" style="color:var(--amber)">◆</span>' : '') + '</td>' +
+      '<td>' + (r.skipped ? '<span class="fnt">SKIP</span>' : fmtAns(r.answers)) + '</td>';
+    if(grading){
+      cells += '<td>' + (r.skipped ? '<span class="fnt">—</span>' : fmtAns(r.correct)) + '</td>' +
+        '<td>' + (r.result === null ? '<span class="fnt">—</span>' :
+          (r.result ? '<span class="ok">✓</span>' : '<span class="no">✗</span>')) + '</td>';
+    }
+    cells += '<td>' + (r.confidence ? CONF_TXT[r.confidence] : '—') + '</td>' +
+      '<td>' + fmtTime(t) + '</td>' +
+      '<td class="fnt">' + (r.durationMs != null ? fmtSec(r.durationMs) : '—') + '</td>';
+    return '<tr class="' + (i === edit.sel ? 'cur' : '') + '">' + cells + '</tr>';
+  }).join('');
+
+  $('edit-body').innerHTML =
+    '<table class="list"><thead><tr><th>#</th><th>MRK</th><th>RESPONSE</th>' +
+    (grading ? '<th>KEY</th><th>RSLT</th>' : '') +
+    '<th>CONF</th><th>TIME</th><th>DUR</th></tr></thead><tbody>' + rows + '</tbody></table>';
+
+  const bar = $('renum-bar');
+  if(edit.renum !== null){
+    bar.classList.add('on');
+    bar.innerHTML = 'RENUMBER Q' + pad(S.responses[edit.sel].n) + ' → <b>' +
+      (edit.renum || '·') + '</b> &nbsp; (ENTER APPLY · ESC CANCEL)';
+  } else bar.classList.remove('on');
+}
+function editToggleLetter(i){
+  const r = S.responses[edit.sel];
+  if(!r) return;
+  if(edit.field === 'correct' && r.skipped) return;   // skipped rows have no key
+  const arr = edit.field === 'answers' ? (r.answers = r.answers || []) : (r.correct = r.correct || []);
+  if(edit.field === 'answers' && r.skipped) r.skipped = false;   // answering un-skips
+  const L = LETTERS[i];
+  const idx = arr.indexOf(L);
+  if(idx >= 0) arr.splice(idx, 1); else { arr.push(L); arr.sort(); }
+  recomputeRec(r);
+  save();
+  renderEdit();
+}
+function editToggleMark(){
+  const r = S.responses[edit.sel];
+  if(!r) return;
+  r.marked = !r.marked;
+  save();
+  renderEdit();
+}
+function editSetConf(c){
+  const r = S.responses[edit.sel];
+  if(!r) return;
+  r.confidence = (r.confidence === c) ? 0 : c;
+  save();
+  renderEdit();
+}
+function editRenumApply(){
+  const n = parseInt(edit.renum, 10);
+  const r = S.responses[edit.sel];
+  if(r && n > 0){ r.n = n; save(); }
+  edit.renum = null;
+  renderEdit();
+}
+
+/* ================= history overlay ================= */
+function histStats(sess){
+  const total = sess.responses.length;
+  const skipped = sess.responses.filter(r => r.skipped).length;
+  const answered = total - skipped;
+  const c = sess.responses.filter(r => r.result === true).length;
+  const w = sess.responses.filter(r => r.result === false).length;
+  const times = sess.responses.filter(r => !r.skipped && r.durationMs != null)
+                .map(r => r.durationMs);
+  const marked = sess.responses.filter(r => r.marked).length;
+  return {
+    total, skipped, answered, c, w, marked, times,
+    score: c + '/' + total,
+    acc: total ? (c / total * 100).toFixed(1) + '%' : '—',
+    avg: times.length ? times.reduce((p,q)=>p+q,0)/times.length : null,
+    fastest: times.length ? Math.min.apply(null, times) : null,
+    slowest: times.length ? Math.max.apply(null, times) : null
+  };
+}
+function openHistory(){
+  hist.open = true;
+  hist.compare = false;
+  hist.rows = loadHistory().slice().reverse();   // newest first
+  hist.sel = 0;
+  hist.picks = new Set();
+  $('ovl-history').hidden = false;
+  renderHist();
+}
+function closeHistory(){
+  hist.open = false;
+  $('ovl-history').hidden = true;
+  if(hist.compare){ hist.compare = false; $('ovl-compare').hidden = true; }
+}
+function renderHist(){
+  const n = hist.rows.length;
+  $('hist-sub').textContent = n + ' SESSION' + (n===1?'':'S') + ' ARCHIVED (LAST 50 KEPT)';
+  if(!n){
+    $('hist-body').innerHTML = '<div style="padding:30px;color:var(--faint);text-align:center">No archived sessions yet. Finished sessions are stored here automatically.</div>';
+    return;
+  }
+  if(hist.sel >= n) hist.sel = n - 1;
+  let rows = hist.rows.map((s, i) => {
+    const st = histStats(s);
+    const t = new Date(s.startedAt);
+    const score = s.mode === 'grading' ? (st.total ? st.acc : '—') : '—';
+    const modeTxt = s.mode === 'grading' ? (s.blind ? 'GRADING·BLIND' : 'GRADING') : 'LOGGING';
+    return '<tr class="' + (i === hist.sel ? 'cur ' : '') + (hist.picks.has(i) ? 'picked' : '') + '">' +
+      '<td>' + (hist.picks.has(i) ? '<span class="ok">●</span>' : '<span class="fnt">○</span>') + '</td>' +
+      '<td>' + fmtDate(t) + ' ' + fmtTime(t).slice(0,5) + '</td>' +
+      '<td>' + modeTxt + '</td>' +
+      '<td>' + st.total + '</td>' +
+      '<td>' + score + '</td>' +
+      '<td>' + fmtDur(s.activeMs || 0) + '</td>' +
+      '<td class="fnt">' + s.sessionId + '</td></tr>';
+  }).join('');
+  $('hist-body').innerHTML =
+    '<table class="list"><thead><tr><th></th><th>DATE</th><th>MODE</th><th>Q</th><th>ACCURACY</th><th>ACTIVE</th><th>SESSION</th></tr></thead><tbody>' +
+    rows + '</tbody></table>';
+}
+function openCompare(){
+  if(hist.picks.size < 2) return;
+  const idx = [...hist.picks].slice(0, 5);
+  const sess = idx.map(i => hist.rows[i]);
+  const st = sess.map(histStats);
+  $('cmp-sub').textContent = idx.length + ' SESSIONS';
+  const metric = (l, f) =>
+    '<tr><td class="fnt">' + l + '</td>' + sess.map((s, i) => '<td>' + f(s, st[i]) + '</td>').join('') + '</tr>';
+  let html = '<table class="list"><thead><tr><th></th>' +
+    sess.map(s => '<th>' + s.sessionId + '</th>').join('') + '</tr></thead><tbody>';
+  html += metric('DATE', s => { const t = new Date(s.startedAt); return fmtDate(t) + ' ' + fmtTime(t).slice(0,5); });
+  html += metric('MODE', s => s.mode === 'grading' ? (s.blind ? 'GRADING·BLIND' : 'GRADING') : 'LOGGING');
+  html += metric('QUESTIONS', (s, x) => x.total);
+  html += metric('ANSWERED', (s, x) => x.answered);
+  html += metric('SKIPPED', (s, x) => x.skipped);
+  html += metric('MARKED', (s, x) => x.marked);
+  if(sess.some(s => s.mode === 'grading')){
+    html += metric('CORRECT', (s, x) => s.mode === 'grading' ? x.c : '—');
+    html += metric('INCORRECT', (s, x) => s.mode === 'grading' ? x.w : '—');
+    html += metric('SCORE', (s, x) => s.mode === 'grading' ? x.score : '—');
+    html += metric('ACCURACY', (s, x) => s.mode === 'grading' ? x.acc : '—');
+  }
+  html += metric('AVG RESPONSE', (s, x) => x.avg != null ? fmtSec(x.avg) : '—');
+  html += metric('FASTEST', (s, x) => x.fastest != null ? fmtSec(x.fastest) : '—');
+  html += metric('SLOWEST', (s, x) => x.slowest != null ? fmtSec(x.slowest) : '—');
+  html += metric('ACTIVE TIME', s => fmtDur(s.activeMs || 0));
+  html += '</tbody></table>';
+  $('cmp-body').innerHTML = html;
+  hist.compare = true;
+  $('ovl-compare').hidden = false;
+}
+function deleteHistRow(){
+  const i = hist.sel;
+  if(!hist.rows[i]) return;
+  const s = hist.rows[i];
+  confirmAsk('Delete archived session ' + s.sessionId + '? This cannot be undone.', () => {
+    const a = loadHistory();
+    const j = a.findIndex(x => x.sessionId === s.sessionId);
+    if(j >= 0){ a.splice(j, 1); saveHistory(a); }
+    hist.rows.splice(i, 1);
+    hist.picks.delete(i);
+    renderHist();
+  });
+}
+function viewHistRow(){
+  const s = hist.rows[hist.sel];
+  if(!s) return;
+  closeHistory();
+  curDash = s; histView = true;
+  screen = 'dash';
+  renderDash();
+  show('scr-dash');
+}
+
+/* ================= dashboard ================= */
 function renderDash(){
-  const d = new Date(S.startedAt);
-  const e = S.endedAt ? new Date(S.endedAt) : null;
-  const total = S.responses.length;
-  const stat = (l, v) => '<div class="stat"><div class="stat-l">' + l + '</div><div class="stat-v">' + v + '</div></div>';
+  const sess = curDash;
+  if(!sess) return;
+  const d = new Date(sess.startedAt);
+  const e = sess.endedAt ? new Date(sess.endedAt) : null;
+  const st = histStats(sess);
+  const grading = sess.mode === 'grading';
+  const colCount = grading ? 9 : 7;
 
-  let stats =
-    stat('SESSION', S.sessionId) +
-    stat('MODE', S.mode === 'logging' ? 'LOGGING' : 'GRADING') +
-    stat('DATE', fmtDate(d)) +
-    stat('START', fmtTime(d)) +
-    stat('END', e ? fmtTime(e) : '—') +
-    stat('ACTIVE TIME', fmtDur(S.activeMs)) +
-    stat('QUESTIONS', total);
-
-  if(S.mode === 'grading'){
-    const c = S.responses.filter(r => r.result).length;
-    const w = total - c;
-    const acc = total ? (c / total * 100).toFixed(1) + '%' : '—';
-    stats += stat('CORRECT', c) + stat('INCORRECT', w) +
-             stat('SCORE', c + '/' + total) + stat('ACCURACY', acc);
+  const hero = (l, v, cls) =>
+    '<div class="hero-cell' + (cls ? ' ' + cls : '') + '"><div class="hero-l">' + l +
+    '</div><div class="hero-v">' + v + '</div></div>';
+  let heroRow;
+  if(grading){
+    heroRow = hero('SCORE', st.score, 'accent') + hero('ACCURACY', st.acc, 'accent') +
+      hero('CORRECT', st.c, 'ok') + hero('INCORRECT', st.w, 'no') + hero('QUESTIONS', st.total);
+  } else {
+    heroRow = hero('RESPONSES', st.answered, 'accent') + hero('QUESTIONS', st.total) +
+      hero('MARKED', st.marked) + hero('SKIPPED', st.skipped);
   }
 
-  const rows = S.responses.map(r => {
+  const meta = (l, v) => '<div class="meta-chip"><span>' + l + '</span>' + v + '</div>';
+  const metaRow =
+    meta('SESSION', sess.sessionId) +
+    meta('MODE', grading ? (sess.blind ? 'GRADING · BLIND' : 'GRADING') : 'LOGGING') +
+    meta('DATE', fmtDate(d)) +
+    meta('START', fmtTime(d)) +
+    meta('END', e ? fmtTime(e) : '—') +
+    meta('ACTIVE TIME', fmtDur(sess.activeMs || 0)) +
+    meta('ANSWERED', st.answered) +
+    meta('SKIPPED', st.skipped) +
+    meta('MARKED', st.marked);
+
+  const mini = (l, v) => '<div class="mini"><div class="mini-l">' + l + '</div><div class="mini-v">' + v + '</div></div>';
+  const timingCard =
+    '<div class="dash-card"><div class="dash-l">RESPONSE TIMING</div><div class="mini-grid">' +
+    mini('AVG RESPONSE', st.avg != null ? fmtSec(st.avg) : '—') +
+    mini('MEDIAN', st.times.length ? fmtSec(median(st.times)) : '—') +
+    mini('FASTEST', st.fastest != null ? fmtSec(st.fastest) : '—') +
+    mini('SLOWEST', st.slowest != null ? fmtSec(st.slowest) : '—') +
+    mini('TOTAL', st.times.length ? fmtSec(st.times.reduce((p,q)=>p+q,0)) : '—') +
+    '</div></div>';
+
+  const confs = [1,2,3].map(c => {
+    const rs = sess.responses.filter(r => r.confidence === c);
+    const cc = rs.filter(r => r.result === true).length;
+    const gg = rs.filter(r => r.result !== null);
+    return { c, n: rs.length, cc, acc: gg.length ? (cc / gg.length * 100).toFixed(0) + '%' : '—' };
+  }).filter(x => x.n > 0);
+  const confCard = confs.length
+    ? '<div class="dash-card"><div class="dash-l">CONFIDENCE BREAKDOWN</div><div class="tbl-wrap"><table>' +
+      '<thead><tr><th>CONFIDENCE</th><th>QUESTIONS</th>' +
+      (grading ? '<th>CORRECT</th><th>ACCURACY</th>' : '') + '</tr></thead><tbody>' +
+      confs.map(x => '<tr><td>' + CONF_TXT[x.c] + '</td><td>' + x.n + '</td>' +
+        (grading ? '<td>' + x.cc + '</td><td>' + x.acc + '</td>' : '') + '</tr>').join('') +
+      '</tbody></table></div></div>'
+    : '';
+
+  let analytics = '';
+  if(st.times.length || confs.length){
+    analytics = '<div class="dash-cards">' + (st.times.length ? timingCard : '') + confCard + '</div>';
+  }
+
+  let bars = '';
+  if(sess.responses.length){
+    const maxD = Math.max.apply(null, sess.responses.map(r => r.durationMs || 0).concat([1]));
+    bars = '<div class="dash-sec-l">PER-QUESTION RESPONSE TIME</div><div class="bars">' +
+      sess.responses.map(r => {
+        const w = Math.max(3, Math.round(((r.durationMs || 0) / maxD) * 100));
+        const cls = r.skipped ? 'sk' : (r.marked ? 'mk' : '');
+        return '<div class="bar-row ' + cls + '"><span class="bl">Q' + pad(r.n) + '</span>' +
+          '<div class="bar"><i style="width:' + w + '%"></i></div>' +
+          '<span class="bt">' + (r.durationMs != null ? fmtSec(r.durationMs) : '—') + '</span></div>';
+      }).join('') + '</div>';
+  }
+
+  const rows = sess.responses.map(r => {
     const t = new Date(r.iso);
-    let cells = '<td>' + pad(r.n) + '</td><td>' + fmtAns(r.answers) + '</td>';
-    if(S.mode === 'grading'){
-      cells += '<td>' + fmtAns(r.correct) + '</td>' +
-               '<td class="' + (r.result ? 'ok' : 'no') + '">' + (r.result ? '✓ CORRECT' : '✗ INCORRECT') + '</td>';
+    let cells = '<td>' + pad(r.n) + '</td>' +
+      '<td>' + (r.marked ? '<span style="color:var(--amber)">◆</span>' : '') + '</td>';
+    if(r.skipped) cells += '<td><span class="fnt">SKIPPED</span></td>';
+    else cells += '<td>' + fmtAns(r.answers) + '</td>';
+    if(grading){
+      if(r.skipped) cells += '<td><span class="fnt">—</span></td><td><span class="fnt">—</span></td>';
+      else cells += '<td>' + fmtAns(r.correct) + '</td>' +
+        '<td class="' + (r.result ? 'ok' : 'no') + '">' + (r.result ? '✓ CORRECT' : '✗ INCORRECT') + '</td>';
     }
-    cells += '<td>' + fmtDate(t) + '</td><td>' + fmtTime(t) + '</td>';
+    cells += '<td>' + (r.confidence ? CONF_TXT[r.confidence] : '—') + '</td>' +
+      '<td class="fnt">' + (r.durationMs != null ? fmtSec(r.durationMs) : '—') + '</td>' +
+      '<td>' + fmtDate(t) + '</td><td>' + fmtTime(t) + '</td>';
     return '<tr>' + cells + '</tr>';
-  }).join('') || '<tr><td colspan="6" class="dim">No responses recorded.</td></tr>';
+  }).join('') || '<tr><td colspan="' + colCount + '" class="dim">No responses recorded.</td></tr>';
+
+  const headBtns = histView
+    ? '<button type="button" class="ctl" id="btn-dash-back">BACK<kbd>ESC</kbd></button>' +
+      '<button type="button" class="ctl" id="btn-dash-json">EXPORT JSON<kbd>J</kbd></button>' +
+      '<button type="button" class="ctl" id="btn-dash-csv">EXPORT CSV<kbd>C</kbd></button>'
+    : '<button type="button" class="ctl" id="btn-dash-new">NEW SESSION<kbd>N</kbd></button>' +
+      '<button type="button" class="ctl" id="btn-dash-json">EXPORT JSON<kbd>J</kbd></button>' +
+      '<button type="button" class="ctl" id="btn-dash-csv">EXPORT CSV<kbd>C</kbd></button>';
+
+  const footHint = histView
+    ? 'ESC BACK &nbsp;·&nbsp; J EXPORT JSON &nbsp;·&nbsp; C EXPORT CSV'
+    : 'N NEW SESSION &nbsp;·&nbsp; J EXPORT JSON &nbsp;·&nbsp; C EXPORT CSV';
 
   $('scr-dash').innerHTML =
     '<header class="dash-head"><div>' +
       '<div class="dash-title">SESSION REPORT</div>' +
-      '<div class="dash-sub">' + (S.mode === 'logging' ? 'LOGGING' : 'GRADING') + ' · ' + S.sessionId + '</div>' +
-    '</div><button type="button" class="ctl" id="btn-dash-new">NEW SESSION<kbd>N</kbd></button></header>' +
-    '<div class="dash-stats">' + stats + '</div>' +
-    '<div class="dash-log-l">SESSION LOG</div>' +
-    '<div class="tbl-wrap"><table><thead><tr><th>#</th><th>RESPONSE</th>' +
-    (S.mode === 'grading' ? '<th>CORRECT</th><th>RESULT</th>' : '') +
-    '<th>DATE</th><th>TIME</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+      '<div class="dash-sub">' + (grading ? (sess.blind ? 'GRADING · BLIND' : 'GRADING') : 'LOGGING') +
+      ' · ' + sess.sessionId + '</div>' +
+    '</div><div class="dash-actions">' + headBtns + '</div></header>' +
+    '<div class="dash-hero">' + heroRow + '</div>' +
+    '<div class="dash-meta">' + metaRow + '</div>' +
+    analytics +
+    bars +
+    '<div class="dash-sec-l">SESSION LOG</div>' +
+    '<div class="tbl-wrap"><table><thead><tr><th>#</th><th>MRK</th><th>RESPONSE</th>' +
+    (grading ? '<th>CORRECT</th><th>RESULT</th>' : '') +
+    '<th>CONF</th><th>DUR</th><th>DATE</th><th>TIME</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+    '<div class="dash-foot">' + footHint + '</div>';
 
-  $('btn-dash-new').addEventListener('click', ev => { ev.currentTarget.blur(); askNew(); });
+  const bind = (id, fn) => { const b = $(id); if(b) b.addEventListener('click', ev => { ev.currentTarget.blur(); fn(); }); };
+  bind('btn-dash-new', askNew);
+  bind('btn-dash-json', () => dl('mcq-session-' + sess.sessionId + '.json', buildSessionJSON(sess), 'application/json'));
+  bind('btn-dash-csv', () => dl('mcq-session-' + sess.sessionId + '.csv', buildSessionCSV(sess), 'text/csv'));
+  bind('btn-dash-back', () => { histView = false; screen = 'start'; renderStart(); show('scr-start'); });
 }
 
-/* ---------- build keys ---------- */
+
+/* ================= export / import ================= */
+function dl(name, text, mime){
+  try{
+    const blob = new Blob([text], { type: mime + ';charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 500);
+  }catch(e){}
+}
+function buildSessionJSON(sess){ return JSON.stringify(sess, null, 2); }
+function csvq(v){ v = (v == null ? '' : String(v)); return '"' + v.replace(/"/g, '""') + '"'; }
+function buildSessionCSV(sess){
+  const head = ['session_id','mode','blind','serial','marked','confidence','skipped',
+                'answers','correct','result','duration_seconds','date','time','timestamp'];
+  const lines = [head.join(',')];
+  sess.responses.forEach(r => {
+    const t = new Date(r.iso);
+    lines.push([
+      csvq(sess.sessionId), csvq(sess.mode), sess.blind ? 'yes' : 'no', r.n,
+      r.marked ? 'yes' : 'no', csvq(CONF_TXT[r.confidence || 0]), r.skipped ? 'yes' : 'no',
+      csvq(r.skipped ? '' : (r.answers || []).join('+')),
+      csvq((!r.skipped && r.correct) ? r.correct.join('+') : ''),
+      csvq(r.skipped ? 'skipped' : (r.result === null ? '' : (r.result ? 'correct' : 'incorrect'))),
+      r.durationMs != null ? (r.durationMs/1000).toFixed(3) : '',
+      csvq(fmtDate(t)), csvq(fmtTime(t)), csvq(r.iso)
+    ].join(','));
+  });
+  return lines.join('\r\n');
+}
+function buildBackup(){
+  return JSON.stringify({
+    app: 'mcq-tracker-backup', version: 2,
+    exportedAt: new Date().toISOString(),
+    active: S, history: loadHistory()
+  }, null, 2);
+}
+function importBackup(data){
+  if(!data || data.app !== 'mcq-tracker-backup' || !Array.isArray(data.history))
+    return { ok:false, msg:'Not a valid MCQ Tracker backup file.' };
+  const nH = data.history.length;
+  const nA = data.active ? 1 : 0;
+  confirmAsk('Import backup? This replaces the current data (' + nH +
+    ' archived session' + (nH===1?'':'s') + (nA ? ' + 1 active session' : '') + ').', () => {
+    saveHistory(data.history);
+    if(data.active && data.active.sessionId){
+      S = data.active;
+      coerceSession(S);
+      save();
+    } else { try{ localStorage.removeItem(KEY); }catch(e){} S = null; }
+    doNew();
+  });
+  return { ok:true };
+}
+function coerceSession(s){
+  s.blind = !!s.blind;
+  s.confidence = s.confidence || 0;
+  s.marked = !!s.marked;
+  s.qAcc = s.qAcc || 0;
+  s.qStart = s.qStart || null;
+  s.activeMs = s.activeMs || 0;
+  (s.responses || []).forEach(r => { r.marked = !!r.marked; r.confidence = r.confidence || 0; });
+}
+
+/* ================= theme ================= */
+function loadTheme(){
+  try{ const t = localStorage.getItem('mcq-tracker-theme'); if(t === 'light' || t === 'dark') return t; }catch(e){}
+  return (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+}
+function saveTheme(t){ try{ localStorage.setItem('mcq-tracker-theme', t); }catch(e){} }
+function applyTheme(t){
+  document.documentElement.dataset.theme = t;
+  const lb = $('theme-label');
+  if(lb) lb.textContent = 'THEME — ' + (t === 'light' ? 'LIGHT' : 'DARK');
+  const b = $('btn-theme');
+  if(b) b.classList.toggle('on', t === 'light');
+}
+function toggleTheme(){
+  const t = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+  saveTheme(t);
+  applyTheme(t);
+}
+
+/* ================= build keys ================= */
 function buildKeys(){
   const wrap = $('keys');
   wrap.innerHTML = '';
@@ -645,80 +1529,166 @@ function buildKeys(){
     b.className = 'key';
     b.dataset.letter = LETTERS[i];
     b.innerHTML =
-      '<span class="led"></span><span class="letter">' + LETTERS[i] + '</span>' +
-      '<span class="cap">[ ' + (i+1) + ' ]</span>';
+      '<span class="knum">' + (i+1) + '</span>' +
+      '<span class="led"></span>' +
+      '<span class="letter">' + LETTERS[i] + '</span>';
     b.addEventListener('click', () => { toggle(i); b.blur(); });
     wrap.appendChild(b);
   }
 }
 
-/* ---------- keyboard ---------- */
+/* ================= keyboard ================= */
 document.addEventListener('keydown', e => {
-  // confirm overlay
+  // --- confirm overlay ---
   if(!$('ovl-confirm').hidden){
     if(e.key === 'y' || e.key === 'Y'){ const cb = confirmCb; confirmClose(); if(cb) cb(); }
     else if(e.key === 'n' || e.key === 'N' || e.key === 'Escape'){ confirmClose(); }
     e.preventDefault();
     return;
   }
-  // start screen
+  // --- renumber sub-mode (edit overlay) ---
+  if(edit.open && edit.renum !== null){
+    if(e.key >= '0' && e.key <= '9' && edit.renum.length < 4){ edit.renum += e.key; renderEdit(); }
+    else if(e.key === 'Backspace'){ edit.renum = edit.renum.slice(0, -1); renderEdit(); }
+    else if(e.key === 'Enter'){ e.preventDefault(); editRenumApply(); }
+    else if(e.key === 'Escape'){ edit.renum = null; renderEdit(); }
+    e.preventDefault();
+    return;
+  }
+  // --- compare overlay ---
+  if(hist.compare){
+    if(e.key === 'Escape'){ hist.compare = false; $('ovl-compare').hidden = true; }
+    e.preventDefault();
+    return;
+  }
+  // --- history overlay ---
+  if(hist.open){
+    const n = hist.rows.length;
+    if(e.key === 'ArrowUp'){ hist.sel = (hist.sel - 1 + n) % Math.max(n,1); renderHist(); }
+    else if(e.key === 'ArrowDown'){ hist.sel = (hist.sel + 1) % Math.max(n,1); renderHist(); }
+    else if(e.key === ' '){ e.preventDefault(); if(hist.picks.has(hist.sel)) hist.picks.delete(hist.sel); else hist.picks.add(hist.sel); renderHist(); }
+    else if(e.key === 'c' || e.key === 'C'){ openCompare(); }
+    else if(e.key === 'd' || e.key === 'D'){ deleteHistRow(); }
+    else if(e.key === 'j' || e.key === 'J'){ dl('mcq-history.json', JSON.stringify(loadHistory(), null, 2), 'application/json'); }
+    else if(e.key === 'u' || e.key === 'U'){ dlBackup(); }
+    else if(e.key === 'Enter'){ e.preventDefault(); viewHistRow(); }
+    else if(e.key === 'Escape'){ closeHistory(); }
+    e.preventDefault();
+    return;
+  }
+  // --- edit overlay ---
+  if(edit.open){
+    if(e.key === 'ArrowUp'){ e.preventDefault(); if(edit.sel > 0){ edit.sel--; renderEdit(); } }
+    else if(e.key === 'ArrowDown'){ e.preventDefault(); if(edit.sel < S.responses.length - 1){ edit.sel++; renderEdit(); } }
+    else if(e.key === 'Home'){ edit.sel = 0; renderEdit(); }
+    else if(e.key === 'End'){ edit.sel = Math.max(0, S.responses.length - 1); renderEdit(); }
+    else if(e.key.length === 1 && e.key >= '1' && e.key <= '4'){ editToggleLetter(e.key.charCodeAt(0) - 49); }
+    else if(e.key === 'Tab'){ e.preventDefault(); if(S.mode === 'grading') edit.field = (edit.field === 'answers' ? 'correct' : 'answers'); renderEdit(); }
+    else if(e.key === 'r' || e.key === 'R'){ editToggleMark(); }
+    else if(e.key === 'x' || e.key === 'X'){ if(S.responses.length){ edit.renum = ''; renderEdit(); } }
+    else if(e.key === '7' || e.key === '8' || e.key === '9'){ editSetConf(e.key.charCodeAt(0) - 54); }
+    else if(e.key === 'Escape'){ e.preventDefault(); closeEdit(); }
+    e.preventDefault();
+    return;
+  }
+  if(e.key === 't' || e.key === 'T'){ toggleTheme(); return; }
+  if(e.repeat) return;
+
+  // --- start screen ---
   if(screen === 'start'){
     if(e.key === '1'){ e.preventDefault(); newSession('logging'); }
     else if(e.key === '2'){ e.preventDefault(); newSession('grading'); }
+    else if(e.key === 'b' || e.key === 'B'){ blindNext = !blindNext; saveBlind(); renderStart(); }
+    else if(e.key === 'h' || e.key === 'H'){ openHistory(); }
+    else if(e.key === 'i' || e.key === 'I'){ $('file-import').click(); }
     return;
   }
-  // dashboard
+  // --- dashboard ---
   if(screen === 'dash'){
-    if(e.key === 'n' || e.key === 'N') askNew();
+    if(e.key === 'n' || e.key === 'N'){ if(!histView) askNew(); }
+    else if(e.key === 'j' || e.key === 'J'){ if(curDash) dl('mcq-session-' + curDash.sessionId + '.json', buildSessionJSON(curDash), 'application/json'); }
+    else if(e.key === 'c' || e.key === 'C'){ if(curDash) dl('mcq-session-' + curDash.sessionId + '.csv', buildSessionCSV(curDash), 'text/csv'); }
+    else if(e.key === 'h' || e.key === 'H'){ openHistory(); }
+    else if(e.key === 'Escape' && histView){ histView = false; screen = 'start'; renderStart(); show('scr-start'); }
     return;
   }
-  // panel — paused
+  // --- panel: paused ---
   if(S && S.status === 'paused'){
     if(e.code === 'Space'){ e.preventDefault(); resume(); }
     else if(e.key === 'f' || e.key === 'F'){ finishSession(); }
     else if(e.key === 'n' || e.key === 'N'){ askNew(); }
+    else if(e.key === 'e' || e.key === 'E'){ openEdit(); }
     return;
   }
-  // panel — active
+  // --- panel: active ---
   if(e.key.length === 1 && e.key >= '1' && e.key <= '4'){
     toggle(e.key.charCodeAt(0) - 49);
   }
   else if(e.key === 'Enter'){ e.preventDefault(); commit(); }
   else if(e.key === 'Escape'){ e.preventDefault(); pause(); }
+  else if(e.key === 's' || e.key === 'S'){ skip(); }
+  else if(e.key === 'm' || e.key === 'M'){ toggleMark(); }
+  else if(e.key === 'e' || e.key === 'E'){ openEdit(); }
+  else if(e.key === '7'){ setConf(1); }
+  else if(e.key === '8'){ setConf(2); }
+  else if(e.key === '9'){ setConf(3); }
 });
 
-/* ---------- mouse wiring ---------- */
+/* ================= mouse wiring ================= */
 document.querySelectorAll('.mode-btn').forEach(b =>
   b.addEventListener('click', () => { b.blur(); newSession(b.dataset.mode); }));
+$('btn-blind').addEventListener('click', e => { e.currentTarget.blur(); blindNext = !blindNext; saveBlind(); renderStart(); });
+$('btn-theme').addEventListener('click', e => { e.currentTarget.blur(); toggleTheme(); });
 $('btn-resume').addEventListener('click', e => { e.currentTarget.blur(); resume(); });
+$('btn-edit-paused').addEventListener('click', e => { e.currentTarget.blur(); openEdit(); });
 $('btn-finish').addEventListener('click', e => { e.currentTarget.blur(); finishSession(); });
 $('btn-new').addEventListener('click', e => { e.currentTarget.blur(); askNew(); });
 $('btn-yes').addEventListener('click', () => { const cb = confirmCb; confirmClose(); if(cb) cb(); });
 $('btn-no').addEventListener('click', confirmClose);
+$('btn-hist-json').addEventListener('click', e => { e.currentTarget.blur(); dl('mcq-history.json', JSON.stringify(loadHistory(), null, 2), 'application/json'); });
+$('btn-backup').addEventListener('click', e => { e.currentTarget.blur(); dlBackup(); });
+$('file-import').addEventListener('change', ev => {
+  const f = ev.target.files && ev.target.files[0];
+  ev.target.value = '';
+  if(!f) return;
+  const rd = new FileReader();
+  rd.onload = () => {
+    try{ importBackup(JSON.parse(rd.result)); }
+    catch(err){ confirmAsk('Import failed: the file is not readable as a backup.'); }
+  };
+  rd.readAsText(f);
+});
+function dlBackup(){
+  const d = new Date();
+  dl('mcq-tracker-backup-' + d.getFullYear() + pad(d.getMonth()+1) + pad(d.getDate()) + '.json',
+     buildBackup(), 'application/json');
+}
 
-/* ---------- timer tick ---------- */
+/* ================= timer tick ================= */
 setInterval(() => {
   if(S && S.status === 'active' && screen === 'panel'){
     $('hud-timer').textContent = fmtDur(activeMsNow());
   }
 }, 500);
 
-/* ---------- init / recovery ---------- */
+/* ================= init / recovery ================= */
 (function init(){
   buildKeys();
+  applyTheme(loadTheme());
+  blindNext = loadBlind();
+  renderStart();
   const saved = loadSaved();
   if(saved && saved.sessionId){
     S = saved;
+    coerceSession(S);
     if(S.status === 'finished'){
-      screen = 'dash';
-      renderDash();
-      show('scr-dash');
+      finishFromSaved();
       return;
     }
-    // fold elapsed time up to the interruption, then hold paused
-    if(S.status === 'active'){
+    if(S.status === 'active'){         // fold elapsed time, hold paused
       S.activeMs = activeMsNow();
-      S.lastResume = null;
+      S.qAcc = qTimeNow();
+      S.lastResume = null; S.qStart = null;
       S.status = 'paused';
       save();
     }
@@ -728,14 +1698,31 @@ setInterval(() => {
     const chip = $('recovered-chip');
     chip.hidden = false;
     setTimeout(() => { chip.hidden = true; }, 3500);
-    if(S.status === 'paused'){
-      $('pause-timer').textContent = 'ACTIVE ' + fmtDur(S.activeMs);
-      $('ovl-pause').hidden = false;
-    }
+    if(S.status === 'paused') showPause();
     return;
   }
   show('scr-start');
+
+  function finishFromSaved(){
+    // previously finished session: show its report again
+    const a = loadHistory();
+    if(!a.some(x => x.sessionId === S.sessionId)){
+      a.push(JSON.parse(JSON.stringify(S)));
+      while(a.length > 50) a.shift();
+      saveHistory(a);
+    }
+    curDash = S; histView = false;
+    screen = 'dash';
+    renderDash();
+    show('scr-dash');
+  }
 })();
+
+/* ================= PWA (active only when hosted with sw.js present) ================= */
+if('serviceWorker' in navigator &&
+   (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')){
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
 </script>
 </body>
 </html>
