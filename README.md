@@ -4,6 +4,8 @@ A tiny, keyboard-first tool to record MCQ answers and optionally grade them.
 
 **Live app:** [https://s2sofficial.github.io/mcq/](https://s2sofficial.github.io/mcq/)
 
+[<img width="1672" height="941" alt="Poster" src="https://github.com/user-attachments/assets/ca79f5ae-1a22-4c47-9a10-a56e40f094a4" />](https://s2sofficial.github.io/mcq/)
+
 ## Features
 
 - **Keyboard only:** Press `1` `2` `3` `4` for A B C D. Press `Enter` to commit. No mouse needed.
