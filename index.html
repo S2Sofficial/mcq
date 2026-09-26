@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCQ Response Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f1113;
+  --bg-hi:#16191d;
+  --text:#d6d9db;
+  --dim:#79828a;
+  --faint:#4a5258;
+  --line:rgba(255,255,255,.08);
+  --amber:#f0a437;
+  --green:#37c871;
+  --red:#e2554f;
+  --white-led:#dfe8ec;
+  font-size:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:
+    radial-gradient(1200px 700px at 50% 30%, var(--bg-hi), var(--bg) 70%),
+    var(--bg);
+  color:var(--text);
+  font-family:'IBM Plex Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  -webkit-font-smoothing:antialiased;
+  user-select:none;
+  touch-action:manipulation;
+}
+#app{height:100dvh;max-width:1240px;margin:0 auto;display:flex;flex-direction:column;padding:14px 18px}
+.screen{flex:1;display:flex;flex-direction:column;min-height:0}
+.screen[hidden]{display:none!important}
+kbd{
+  font-family:inherit;font-size:.72em;color:var(--dim);
+  border:1px solid var(--line);border-radius:4px;padding:1px 6px;margin-left:8px;
+}
+.ok{color:var(--green)} .no{color:var(--red)} .dim{color:var(--dim)}
+
+/* ============ START SCREEN ============ */
+#scr-start{align-items:center;justify-content:center;gap:44px}
+.brand{
+  font-size:13px;letter-spacing:.55em;color:var(--dim);text-indent:.55em;
+  padding-bottom:14px;border-bottom:1px solid var(--line);
+}
+.mode-grid{display:flex;gap:26px;flex-wrap:wrap;justify-content:center}
+.mode-btn{
+  font-family:inherit;cursor:pointer;color:var(--text);
+  width:min(330px,84vw);min-height:190px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+  background:linear-gradient(180deg,#343a3f 0%,#272c30 48%,#1c2023 100%);
+  border:5px solid #0b0d0f;border-radius:14px;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.05),
+    0 10px 0 #08090b,
+    0 16px 26px rgba(0,0,0,.55),
+    inset 0 2px 3px rgba(255,255,255,.09),
+    inset 0 -4px 8px rgba(0,0,0,.45);
+  transition:transform 70ms ease, box-shadow 70ms ease;
+}
+.mode-btn:hover{filter:brightness(1.07)}
+.mode-btn:active,.mode-btn.pressed{
+  transform:translateY(8px);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.05),
+    0 2px 0 #08090b,
+    0 5px 10px rgba(0,0,0,.5),
+    inset 0 2px 8px rgba(0,0,0,.5);
+}
+.mode-name{font-size:26px;font-weight:700;letter-spacing:.28em;text-indent:.28em}
+.mode-desc{font-size:12px;color:var(--dim)}
+.mode-key{font-size:13px;color:var(--faint);margin-top:6px}
+.start-foot{font-size:11px;letter-spacing:.18em;color:var(--faint)}
+
+/* ============ PANEL HUD ============ */
+.hud{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:16px;
+  padding:4px 6px 16px;flex-wrap:wrap;
+}
+.hud-mode{font-size:13px;font-weight:600;letter-spacing:.3em}
+.hud-stage{display:flex;align-items:center;gap:8px;margin-top:7px;font-size:11px;letter-spacing:.2em;color:var(--dim)}
+.stage-led{width:8px;height:8px;border-radius:50%;background:#26292c;border:1px solid rgba(255,255,255,.12)}
+.stage-led.led-amber{background:var(--amber);box-shadow:0 0 8px rgba(240,164,55,.8)}
+.stage-led.led-white{background:var(--white-led);box-shadow:0 0 8px rgba(223,232,236,.7)}
+.hud-session{margin-top:7px;font-size:10px;letter-spacing:.14em;color:var(--faint)}
+.hud-q{display:flex;align-items:baseline;gap:10px;justify-content:center;flex:1;min-width:120px}
+.hud-q-label{font-size:13px;letter-spacing:.3em;color:var(--dim)}
+#hud-qnum{font-size:34px;font-weight:600;letter-spacing:.06em;font-variant-numeric:tabular-nums}
+#hud-qnum.nudge{animation:nudge .18s ease}
+@keyframes nudge{50%{opacity:.15}}
+.hud-right{text-align:right}
+.hud-stats{font-size:12px;letter-spacing:.1em;display:flex;gap:14px;justify-content:flex-end}
+.hud-timer{margin-top:7px;font-size:15px;color:var(--dim);font-variant-numeric:tabular-nums}
+
+/* ============ KEYS ============ */
+.keys{
+  flex:1;min-height:0;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(12px,2.4vw,30px);
+  padding-bottom:6px;
+}
+.key{
+  position:relative;cursor:pointer;color:var(--text);font-family:inherit;
+  min-height:180px;height:100%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  background:linear-gradient(180deg,#383e43 0%,#2a2f33 48%,#1d2124 100%);
+  border:5px solid #0b0d0f;border-radius:16px;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.05),
+    0 12px 0 #08090b,
+    0 18px 30px rgba(0,0,0,.6),
+    inset 0 2px 3px rgba(255,255,255,.09),
+    inset 0 -5px 10px rgba(0,0,0,.45);
+  transition:transform 65ms ease, box-shadow 65ms ease, border-color 65ms ease, filter 65ms ease;
+}
+.key:focus-visible{outline:2px dashed var(--dim);outline-offset:6px}
+.key:not(.sel):hover{filter:brightness(1.08)}
+.key:not(.sel):active{
+  transform:translateY(9px);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.05),
+    0 3px 0 #08090b,
+    0 6px 12px rgba(0,0,0,.5),
+    inset 0 2px 10px rgba(0,0,0,.5);
+}
+.key .led{
+  position:absolute;top:16px;left:50%;transform:translateX(-50%);
+  width:13px;height:13px;border-radius:50%;
+  background:#22262a;border:1px solid rgba(255,255,255,.1);
+}
+.key .letter{font-size:clamp(56px,10.5vw,148px);font-weight:600;line-height:1;margin-top:14px}
+.key .cap{font-size:13px;color:var(--faint);margin-top:8px;letter-spacing:.1em}
+/* latched (selected) state */
+.key.sel{
+  transform:translateY(10px);
+  background:linear-gradient(180deg,#2b3034 0%,#232729 55%,#1a1d20 100%);
+  border-color:rgba(240,164,55,.55);
+  box-shadow:
+    0 0 0 1px rgba(240,164,55,.18),
+    0 2px 0 #08090b,
+    0 5px 10px rgba(0,0,0,.5),
+    inset 0 3px 10px rgba(0,0,0,.55),
+    0 0 26px rgba(240,164,55,.22);
+}
+.key.sel .led{background:var(--amber);box-shadow:0 0 12px rgba(240,164,55,.9),0 0 4px rgba(240,164,55,.9)}
+.key.sel .letter{color:#f6c37a}
+.key.sel.stage-key{
+  border-color:rgba(223,232,236,.5);
+  box-shadow:
+    0 0 0 1px rgba(223,232,236,.15),
+    0 2px 0 #08090b,
+    0 5px 10px rgba(0,0,0,.5),
+    inset 0 3px 10px rgba(0,0,0,.55),
+    0 0 24px rgba(223,232,236,.18);
+}
+.key.sel.stage-key .led{background:var(--white-led);box-shadow:0 0 12px rgba(223,232,236,.85)}
+.key.sel.stage-key .letter{color:var(--white-led)}
+/* grading feedback: LED border glow */
+.keys.fb-ok .key{
+  border-color:rgba(55,200,113,.6);
+  box-shadow:
+    0 0 0 1px rgba(55,200,113,.2),
+    0 12px 0 #08090b,0 18px 30px rgba(0,0,0,.6),
+    inset 0 2px 3px rgba(255,255,255,.09),
+    inset 0 -5px 10px rgba(0,0,0,.45),
+    0 0 28px rgba(55,200,113,.28);
+}
+.keys.fb-ok .key.sel{
+  transform:translateY(10px);
+  border-color:rgba(55,200,113,.75);
+  box-shadow:
+    0 0 0 1px rgba(55,200,113,.3),
+    0 2px 0 #08090b,0 5px 10px rgba(0,0,0,.5),
+    inset 0 3px 10px rgba(0,0,0,.55),
+    0 0 34px rgba(55,200,113,.4);
+}
+.keys.fb-ok .key.sel .led{background:var(--green);box-shadow:0 0 14px rgba(55,200,113,.95)}
+.keys.fb-ok .key.sel .letter{color:var(--green)}
+.keys.fb-no .key{
+  border-color:rgba(226,85,79,.6);
+  box-shadow:
+    0 0 0 1px rgba(226,85,79,.2),
+    0 12px 0 #08090b,0 18px 30px rgba(0,0,0,.6),
+    inset 0 2px 3px rgba(255,255,255,.09),
+    inset 0 -5px 10px rgba(0,0,0,.45),
+    0 0 28px rgba(226,85,79,.26);
+}
+.keys.fb-no .key.sel{
+  transform:translateY(10px);
+  border-color:rgba(226,85,79,.75);
+  box-shadow:
+    0 0 0 1px rgba(226,85,79,.3),
+    0 2px 0 #08090b,0 5px 10px rgba(0,0,0,.5),
+    inset 0 3px 10px rgba(0,0,0,.55),
+    0 0 34px rgba(226,85,79,.38);
+}
+.keys.fb-no .key.sel .led{background:var(--red);box-shadow:0 0 14px rgba(226,85,79,.95)}
+.keys.fb-no .key.sel .letter{color:var(--red)}
+
+/* ============ PANEL FOOT ============ */
+.foot{
+  display:flex;justify-content:space-between;align-items:center;gap:18px;
+  padding:14px 6px 2px;border-top:1px solid var(--line);flex-wrap:wrap;
+}
+.hints{font-size:10px;letter-spacing:.18em;color:var(--faint)}
+.log-strip{display:flex;gap:22px;font-size:11px;color:var(--dim);overflow:hidden;flex-wrap:wrap;justify-content:flex-end}
+.log-e{white-space:nowrap;font-variant-numeric:tabular-nums}
+.log-e .ts{color:var(--faint)}
+
+/* recovered chip */
+.chip{
+  position:absolute;top:16px;right:24px;z-index:5;
+  font-size:10px;letter-spacing:.24em;color:var(--amber);
+  border:1px solid rgba(240,164,55,.4);border-radius:4px;padding:5px 10px;
+  background:rgba(15,17,19,.85);
+}
+#scr-panel{position:relative}
+
+/* ============ OVERLAYS ============ */
+.overlay{
+  position:fixed;inset:0;z-index:20;
+  background:rgba(10,11,13,.78);backdrop-filter:blur(2px);
+  display:flex;align-items:center;justify-content:center;
+}
+.overlay[hidden]{display:none!important}
+.pause-card,.confirm-card{
+  background:#17191c;border:1px solid var(--line);border-radius:12px;
+  padding:38px 46px;min-width:min(420px,88vw);
+  box-shadow:0 24px 60px rgba(0,0,0,.6);
+  text-align:center;
+}
+.pause-title{font-size:22px;font-weight:700;letter-spacing:.5em;text-indent:.5em}
+.pause-timer{margin-top:10px;font-size:14px;color:var(--dim);font-variant-numeric:tabular-nums}
+.pause-actions{margin-top:32px;display:flex;flex-direction:column;gap:14px}
+.ctl{
+  font-family:inherit;cursor:pointer;color:var(--text);
+  font-size:13px;letter-spacing:.22em;
+  background:linear-gradient(180deg,#31363b,#24282c);
+  border:4px solid #0b0d0f;border-radius:10px;padding:14px 22px;
+  box-shadow:0 6px 0 #08090b,0 10px 18px rgba(0,0,0,.5),
+    inset 0 1px 2px rgba(255,255,255,.08);
+  transition:transform 60ms ease,box-shadow 60ms ease;
+}
+.ctl:hover{filter:brightness(1.1)}
+.ctl:active{transform:translateY(4px);box-shadow:0 2px 0 #08090b,inset 0 2px 6px rgba(0,0,0,.5)}
+.ctl kbd{margin-left:10px}
+.confirm-msg{font-size:14px;line-height:1.7;letter-spacing:.04em}
+.confirm-actions{margin-top:30px;display:flex;gap:14px;justify-content:center}
+
+/* ============ DASHBOARD ============ */
+#scr-dash{overflow-y:auto;gap:26px;padding:26px 8px 40px}
+.dash-head{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;flex-wrap:wrap}
+.dash-title{font-size:20px;font-weight:700;letter-spacing:.4em}
+.dash-sub{margin-top:8px;font-size:12px;letter-spacing:.18em;color:var(--dim)}
+.dash-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.stat{border:2px solid var(--line);border-radius:10px;padding:14px 16px;background:rgba(255,255,255,.015)}
+.stat-l{font-size:10px;letter-spacing:.22em;color:var(--dim)}
+.stat-v{margin-top:8px;font-size:21px;font-weight:600;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.dash-log-l{margin-top:6px;font-size:11px;letter-spacing:.3em;color:var(--dim);border-bottom:1px solid var(--line);padding-bottom:10px}
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap;font-variant-numeric:tabular-nums}
+thead th{position:sticky;top:0;background:#14171a;font-size:10px;letter-spacing:.18em;color:var(--dim);border-bottom:1px solid rgba(255,255,255,.15)}
+tbody tr:nth-child(even){background:rgba(255,255,255,.02)}
+tbody tr:hover{background:rgba(255,255,255,.045)}
+
+@media (max-width:720px){
+  .keys{grid-template-columns:repeat(2,1fr);grid-auto-rows:1fr}
+  .key{min-height:150px}
+  .hud-q{order:-1;width:100%;justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition-duration:1ms!important;animation-duration:1ms!important}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- START -->
+  <section id="scr-start" class="screen">
+    <div class="brand">MCQ RESPONSE TRACKER</div>
+    <div class="mode-grid">
+      <button type="button" class="mode-btn" data-mode="logging">
+        <div class="mode-name">LOGGING</div>
+        <div class="mode-desc">record responses only</div>
+        <div class="mode-key">PRESS [ 1 ]</div>
+      </button>
+      <button type="button" class="mode-btn" data-mode="grading">
+        <div class="mode-name">GRADING</div>
+        <div class="mode-desc">record responses and grade them</div>
+        <div class="mode-key">PRESS [ 2 ]</div>
+      </button>
+    </div>
+    <div class="start-foot">1–4 SELECT &nbsp;·&nbsp; ENTER COMMIT &nbsp;·&nbsp; ESC PAUSE</div>
+  </section>
+
+  <!-- MAIN PANEL -->
+  <section id="scr-panel" class="screen" hidden>
+    <div id="recovered-chip" class="chip" hidden>SESSION RECOVERED</div>
+    <header class="hud">
+      <div class="hud-left">
+        <div id="hud-mode" class="hud-mode">LOGGING</div>
+        <div id="hud-stage" class="hud-stage" hidden>
+          <span id="stage-led" class="stage-led"></span><span id="stage-text">RESPONSE</span>
+        </div>
+        <div id="hud-session" class="hud-session"></div>
+      </div>
+      <div class="hud-q" id="hud-q">
+        <span class="hud-q-label">Q</span><span id="hud-qnum">001</span>
+      </div>
+      <div class="hud-right">
+        <div id="hud-stats" class="hud-stats"></div>
+        <div id="hud-timer" class="hud-timer">00:00</div>
+      </div>
+    </header>
+
+    <div id="keys" class="keys"></div>
+
+    <footer class="foot">
+      <div class="hints">1–4 SELECT &nbsp;·&nbsp; ENTER COMMIT &nbsp;·&nbsp; ESC PAUSE</div>
+      <div id="log-strip" class="log-strip"></div>
+    </footer>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section id="scr-dash" class="screen" hidden></section>
+</div>
+
+<!-- PAUSE -->
+<div id="ovl-pause" class="overlay" hidden>
+  <div class="pause-card">
+    <div class="pause-title">PAUSED</div>
+    <div class="pause-timer" id="pause-timer"></div>
+    <div class="pause-actions">
+      <button type="button" class="ctl" id="btn-resume">RESUME<kbd>SPACE</kbd></button>
+      <button type="button" class="ctl" id="btn-finish">FINISH SESSION<kbd>F</kbd></button>
+      <button type="button" class="ctl" id="btn-new">NEW SESSION<kbd>N</kbd></button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM -->
+<div id="ovl-confirm" class="overlay" hidden>
+  <div class="confirm-card">
+    <div class="confirm-msg" id="confirm-msg"></div>
+    <div class="confirm-actions">
+      <button type="button" class="ctl" id="btn-yes">YES<kbd>Y</kbd></button>
+      <button type="button" class="ctl" id="btn-no">NO<kbd>N</kbd></button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+const KEY = 'mcq-tracker-v1';
+const $ = id => document.getElementById(id);
+const LETTERS = 'ABCD';
+const pad = n => String(n).padStart(2,'0');
+const pad3 = n => String(n).padStart(3,'0');
+
+let S = null;            // persisted session state
+let screen = 'start';    // start | panel | dash
+let flashing = false;     // grading LED feedback in progress
+let confirmCb = null;
+
+/* ---------- time helpers ---------- */
+function fmtDur(ms){
+  const s = Math.max(0, Math.floor(ms/1000));
+  const h = Math.floor(s/3600), m = Math.floor((s%3600)/60), ss = s%60;
+  return h ? h + ':' + pad(m) + ':' + pad(ss) : pad(m) + ':' + pad(ss);
+}
+function fmtDate(d){ return pad(d.getDate()) + '/' + pad(d.getMonth()+1) + '/' + d.getFullYear(); }
+function fmtTime(d){ return pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds()); }
+function fmtAns(a){ return (a && a.length) ? a.join('+') : '—'; }
+function sid(){
+  const d = new Date();
+  return 'S' + d.getFullYear() + pad(d.getMonth()+1) + pad(d.getDate()) + '-' +
+    Math.random().toString(36).slice(2,6).toUpperCase();
+}
+function activeMsNow(){
+  if(!S) return 0;
+  return S.activeMs + (S.status === 'active' && S.lastResume ? Date.now() - S.lastResume : 0);
+}
+
+/* ---------- persistence ---------- */
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+function loadSaved(){
+  try{ const r = localStorage.getItem(KEY); return r ? JSON.parse(r) : null; }catch(e){ return null; }
+}
+
+/* ---------- screens ---------- */
+function show(id){
+  ['scr-start','scr-panel','scr-dash'].forEach(s => $(s).hidden = (s !== id));
+}
+
+/* ---------- session lifecycle ---------- */
+function newSession(mode){
+  S = {
+    sessionId: sid(),
+    mode: mode,                 // 'logging' | 'grading'
+    stage: 'user',             // grading: 'user' | 'correct'
+    selection: [],
+    pendingUser: null,
+    responses: [],
+    status: 'active',          // 'active' | 'paused' | 'finished'
+    startedAt: new Date().toISOString(),
+    startClock: Date.now(),
+    activeMs: 0,
+    lastResume: Date.now(),
+    endClock: null,
+    endedAt: null
+  };
+  save();
+  screen = 'panel';
+  show('scr-panel');
+  renderPanel();
+}
+
+function pause(){
+  if(!S || screen !== 'panel' || S.status !== 'active' || flashing) return;
+  S.activeMs = activeMsNow();
+  S.lastResume = null;
+  S.status = 'paused';
+  save();
+  $('pause-timer').textContent = 'ACTIVE ' + fmtDur(S.activeMs);
+  $('ovl-pause').hidden = false;
+}
+function resume(){
+  if(!S || S.status !== 'paused') return;
+  S.lastResume = Date.now();
+  S.status = 'active';
+  save();
+  $('ovl-pause').hidden = true;
+  renderPanel();
+}
+function finishSession(){
+  if(!S || S.status === 'finished') return;
+  if(S.status === 'active') S.activeMs = activeMsNow();
+  S.status = 'finished';
+  S.endClock = Date.now();
+  S.endedAt = new Date().toISOString();
+  save();
+  $('ovl-pause').hidden = true;
+  screen = 'dash';
+  renderDash();
+  show('scr-dash');
+}
+
+/* ---------- confirm ---------- */
+function confirmAsk(msg, cb){
+  confirmCb = cb;
+  $('confirm-msg').textContent = msg;
+  $('ovl-confirm').hidden = false;
+}
+function confirmClose(){ $('ovl-confirm').hidden = true; confirmCb = null; }
+function askNew(){
+  if(S && S.responses.length > 0){
+    confirmAsk('Start a new session? The current session data will be cleared.', doNew);
+  } else doNew();
+}
+function doNew(){
+  try{ localStorage.removeItem(KEY); }catch(e){}
+  S = null;
+  $('ovl-pause').hidden = true;
+  screen = 'start';
+  show('scr-start');
+}
+
+/* ---------- selection & commit ---------- */
+function toggle(i){
+  if(!S || screen !== 'panel' || S.status !== 'active' || flashing) return;
+  const L = LETTERS[i];
+  const idx = S.selection.indexOf(L);
+  if(idx >= 0) S.selection.splice(idx, 1);
+  else { S.selection.push(L); S.selection.sort(); }
+  save();
+  renderPanel();
+}
+
+function nudge(){
+  const q = $('hud-q');
+  q.classList.remove('nudge');
+  void q.offsetWidth;
+  q.classList.add('nudge');
+}
+
+function commit(){
+  if(!S || screen !== 'panel' || S.status !== 'active' || flashing) return;
+  if(S.selection.length === 0){ nudge(); return; }   // nothing composed — ignore
+
+  const now = new Date();
+  const rec = {
+    n: S.responses.length + 1,
+    answers: S.selection.slice().sort(),
+    correct: null,
+    result: null,
+    iso: now.toISOString(),
+    sessionId: S.sessionId,
+    mode: S.mode
+  };
+
+  if(S.mode === 'logging'){
+    S.responses.push(rec);
+    S.selection = [];
+    save();
+    renderPanel();
+    return;
+  }
+
+  if(S.stage === 'user'){                 // grading — stage 1 committed
+    S.pendingUser = S.selection.slice().sort();
+    S.stage = 'correct';
+    S.selection = [];
+    save();
+    renderPanel();
+  } else {                                // grading — stage 2 committed -> grade
+    rec.answers = S.pendingUser;         // user's committed response from stage 1
+    rec.correct = S.selection.slice().sort();
+    rec.result = rec.answers.length === rec.correct.length &&
+                 rec.answers.every((a, k) => a === rec.correct[k]);
+    S.responses.push(rec);
+    save();
+    flash(rec.result);
+  }
+}
+
+function flash(ok){
+  flashing = true;
+  const keys = $('keys');
+  keys.classList.add(ok ? 'fb-ok' : 'fb-no');
+  setTimeout(() => {
+    keys.classList.remove('fb-ok', 'fb-no');
+    S.selection = [];
+    S.stage = 'user';
+    S.pendingUser = null;
+    flashing = false;
+    save();
+    if(screen === 'panel') renderPanel();
+  }, 900);
+}
+
+/* ---------- render: panel ---------- */
+function renderPanel(){
+  if(!S) return;
+  $('hud-qnum').textContent = pad3(S.responses.length + 1);
+  $('hud-mode').textContent = S.mode === 'logging' ? 'LOGGING' : 'GRADING';
+  $('hud-session').textContent = S.sessionId;
+
+  const stageEl = $('hud-stage');
+  if(S.mode === 'grading'){
+    stageEl.hidden = false;
+    const keying = S.stage === 'correct';
+    $('stage-text').textContent = keying ? 'KEY ENTRY' : 'RESPONSE';
+    $('stage-led').classList.toggle('led-white', keying);
+    $('stage-led').classList.toggle('led-amber', !keying);
+  } else stageEl.hidden = true;
+
+  if(S.mode === 'grading'){
+    const c = S.responses.filter(r => r.result).length;
+    $('hud-stats').innerHTML =
+      '<span class="ok">✓ ' + c + '</span><span class="no">✗ ' + (S.responses.length - c) + '</span>';
+  } else {
+    $('hud-stats').textContent = S.responses.length + ' LOGGED';
+  }
+  $('hud-timer').textContent = fmtDur(activeMsNow());
+
+  const keying = S.mode === 'grading' && S.stage === 'correct';
+  document.querySelectorAll('#keys .key').forEach(k => {
+    k.classList.toggle('sel', S.selection.includes(k.dataset.letter));
+    k.classList.toggle('stage-key', keying);
+  });
+
+  const strip = $('log-strip');
+  const last = S.responses.slice(-3).reverse();
+  strip.innerHTML = last.map(r => {
+    const t = new Date(r.iso);
+    const mark = r.result === null ? '' :
+      (r.result ? '<span class="ok">✓</span>' : '<span class="no">✗</span>');
+    return '<span class="log-e">Q' + pad(r.n) + ' · ' + fmtAns(r.answers) +
+           ' · <span class="ts">' + fmtTime(t) + '</span> ' + mark + '</span>';
+  }).join('') || '<span class="log-e dim" style="color:var(--faint)">NO ENTRIES</span>';
+}
+
+/* ---------- render: dashboard ---------- */
+function renderDash(){
+  const d = new Date(S.startedAt);
+  const e = S.endedAt ? new Date(S.endedAt) : null;
+  const total = S.responses.length;
+  const stat = (l, v) => '<div class="stat"><div class="stat-l">' + l + '</div><div class="stat-v">' + v + '</div></div>';
+
+  let stats =
+    stat('SESSION', S.sessionId) +
+    stat('MODE', S.mode === 'logging' ? 'LOGGING' : 'GRADING') +
+    stat('DATE', fmtDate(d)) +
+    stat('START', fmtTime(d)) +
+    stat('END', e ? fmtTime(e) : '—') +
+    stat('ACTIVE TIME', fmtDur(S.activeMs)) +
+    stat('QUESTIONS', total);
+
+  if(S.mode === 'grading'){
+    const c = S.responses.filter(r => r.result).length;
+    const w = total - c;
+    const acc = total ? (c / total * 100).toFixed(1) + '%' : '—';
+    stats += stat('CORRECT', c) + stat('INCORRECT', w) +
+             stat('SCORE', c + '/' + total) + stat('ACCURACY', acc);
+  }
+
+  const rows = S.responses.map(r => {
+    const t = new Date(r.iso);
+    let cells = '<td>' + pad(r.n) + '</td><td>' + fmtAns(r.answers) + '</td>';
+    if(S.mode === 'grading'){
+      cells += '<td>' + fmtAns(r.correct) + '</td>' +
+               '<td class="' + (r.result ? 'ok' : 'no') + '">' + (r.result ? '✓ CORRECT' : '✗ INCORRECT') + '</td>';
+    }
+    cells += '<td>' + fmtDate(t) + '</td><td>' + fmtTime(t) + '</td>';
+    return '<tr>' + cells + '</tr>';
+  }).join('') || '<tr><td colspan="6" class="dim">No responses recorded.</td></tr>';
+
+  $('scr-dash').innerHTML =
+    '<header class="dash-head"><div>' +
+      '<div class="dash-title">SESSION REPORT</div>' +
+      '<div class="dash-sub">' + (S.mode === 'logging' ? 'LOGGING' : 'GRADING') + ' · ' + S.sessionId + '</div>' +
+    '</div><button type="button" class="ctl" id="btn-dash-new">NEW SESSION<kbd>N</kbd></button></header>' +
+    '<div class="dash-stats">' + stats + '</div>' +
+    '<div class="dash-log-l">SESSION LOG</div>' +
+    '<div class="tbl-wrap"><table><thead><tr><th>#</th><th>RESPONSE</th>' +
+    (S.mode === 'grading' ? '<th>CORRECT</th><th>RESULT</th>' : '') +
+    '<th>DATE</th><th>TIME</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+
+  $('btn-dash-new').addEventListener('click', ev => { ev.currentTarget.blur(); askNew(); });
+}
+
+/* ---------- build keys ---------- */
+function buildKeys(){
+  const wrap = $('keys');
+  wrap.innerHTML = '';
+  for(let i = 0; i < 4; i++){
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'key';
+    b.dataset.letter = LETTERS[i];
+    b.innerHTML =
+      '<span class="led"></span><span class="letter">' + LETTERS[i] + '</span>' +
+      '<span class="cap">[ ' + (i+1) + ' ]</span>';
+    b.addEventListener('click', () => { toggle(i); b.blur(); });
+    wrap.appendChild(b);
+  }
+}
+
+/* ---------- keyboard ---------- */
+document.addEventListener('keydown', e => {
+  // confirm overlay
+  if(!$('ovl-confirm').hidden){
+    if(e.key === 'y' || e.key === 'Y'){ const cb = confirmCb; confirmClose(); if(cb) cb(); }
+    else if(e.key === 'n' || e.key === 'N' || e.key === 'Escape'){ confirmClose(); }
+    e.preventDefault();
+    return;
+  }
+  // start screen
+  if(screen === 'start'){
+    if(e.key === '1'){ e.preventDefault(); newSession('logging'); }
+    else if(e.key === '2'){ e.preventDefault(); newSession('grading'); }
+    return;
+  }
+  // dashboard
+  if(screen === 'dash'){
+    if(e.key === 'n' || e.key === 'N') askNew();
+    return;
+  }
+  // panel — paused
+  if(S && S.status === 'paused'){
+    if(e.code === 'Space'){ e.preventDefault(); resume(); }
+    else if(e.key === 'f' || e.key === 'F'){ finishSession(); }
+    else if(e.key === 'n' || e.key === 'N'){ askNew(); }
+    return;
+  }
+  // panel — active
+  if(e.key.length === 1 && e.key >= '1' && e.key <= '4'){
+    toggle(e.key.charCodeAt(0) - 49);
+  }
+  else if(e.key === 'Enter'){ e.preventDefault(); commit(); }
+  else if(e.key === 'Escape'){ e.preventDefault(); pause(); }
+});
+
+/* ---------- mouse wiring ---------- */
+document.querySelectorAll('.mode-btn').forEach(b =>
+  b.addEventListener('click', () => { b.blur(); newSession(b.dataset.mode); }));
+$('btn-resume').addEventListener('click', e => { e.currentTarget.blur(); resume(); });
+$('btn-finish').addEventListener('click', e => { e.currentTarget.blur(); finishSession(); });
+$('btn-new').addEventListener('click', e => { e.currentTarget.blur(); askNew(); });
+$('btn-yes').addEventListener('click', () => { const cb = confirmCb; confirmClose(); if(cb) cb(); });
+$('btn-no').addEventListener('click', confirmClose);
+
+/* ---------- timer tick ---------- */
+setInterval(() => {
+  if(S && S.status === 'active' && screen === 'panel'){
+    $('hud-timer').textContent = fmtDur(activeMsNow());
+  }
+}, 500);
+
+/* ---------- init / recovery ---------- */
+(function init(){
+  buildKeys();
+  const saved = loadSaved();
+  if(saved && saved.sessionId){
+    S = saved;
+    if(S.status === 'finished'){
+      screen = 'dash';
+      renderDash();
+      show('scr-dash');
+      return;
+    }
+    // fold elapsed time up to the interruption, then hold paused
+    if(S.status === 'active'){
+      S.activeMs = activeMsNow();
+      S.lastResume = null;
+      S.status = 'paused';
+      save();
+    }
+    screen = 'panel';
+    renderPanel();
+    show('scr-panel');
+    const chip = $('recovered-chip');
+    chip.hidden = false;
+    setTimeout(() => { chip.hidden = true; }, 3500);
+    if(S.status === 'paused'){
+      $('pause-timer').textContent = 'ACTIVE ' + fmtDur(S.activeMs);
+      $('ovl-pause').hidden = false;
+    }
+    return;
+  }
+  show('scr-start');
+})();
+</script>
+</body>
+</html>
